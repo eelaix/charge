@@ -5,10 +5,10 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '',
-    redirect: '/chargerbk/0'
+    redirect: '/0'
   },
   {
-    path: '/chargerbk/:id',
+    path: '/:id',
     name: 'chargerbk',
     component: () => import('@/Chargerbk.vue')
   },
