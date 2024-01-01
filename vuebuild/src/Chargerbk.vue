@@ -227,7 +227,10 @@
   import { paystackpublickey } from '@/config';
   import { prepaylimit } from '@/config';
   import { defaultpaystackid } from '@/config';
-  import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar } from 'ayoba-microapp-api';
+  import { getUserPhoneNumber } from 'ayoba-microapp-api';
+  import { observeUserPresence } from 'ayoba-microapp-api';
+  import { getUserName } from 'ayoba-microapp-api';
+  import { getUserAvatar } from 'ayoba-microapp-api';
   export default {
     name: 'chargerbk',
     components: {
