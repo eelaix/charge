@@ -20,7 +20,7 @@ function getAyoba() {
    return "unknown";
 };
 function getURLParameter(sParam) {
-  let sPageURL = window.location.search.substring(1),
+  var sPageURL = window.location.search.substring(1),
       sURLVariables = sPageURL.split('&'),
       sParameterName,
       i;
@@ -44,9 +44,4 @@ function onNicknameChanged(nickname) {
 };
 function onAvatarChanged(avatar) {
   document.getElementById('test6').src = avatar;
-  document.getElementById('test9').innerText = avatar;
-};
-function onLocationChanged(lat, lon) {
-  document.getElementById('test7').innerText = lat;
-  document.getElementById('test8').innerText = lon;
 };
