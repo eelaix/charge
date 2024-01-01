@@ -19,6 +19,19 @@ function getAyoba() {
    }
    return "unknown";
 };
+function getURLParameter(sParam) {
+  let sPageURL = window.location.search.substring(1),
+      sURLVariables = sPageURL.split('&'),
+      sParameterName,
+      i;
+  for (i = 0; i < sURLVariables.length; i++) {
+    sParameterName = sURLVariables[i].split('=');
+    if (sParameterName[0] === sParam) {
+      return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+    }
+  }
+  return false;
+};
 function onPresenceChanged(presence) {
   document.getElementById('test0').innerText = presence;
   document.getElementById('test1').innerText = Ayoba.getMsisdn();
@@ -30,7 +43,7 @@ function onNicknameChanged(nickname) {
   document.getElementById('test5').innerText = nickname;
 };
 function onAvatarChanged(avatar) {
-  document.getElementById('test6').innerText = JSON.stringify(avatar);
+  document.getElementById('test6').src = avatar;
 };
 function onLocationChanged(lat, lon) {
   document.getElementById('test7').innerText = lat;
