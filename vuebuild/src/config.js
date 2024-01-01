@@ -4,7 +4,10 @@
 // aws apigateway get-rest-apis --query "items[?name=='a'].id" --output text
 export const BASE = 'https://4zc80xpom4.execute-api.ap-east-1.amazonaws.com/a';
 
-//=============================================================================
+// @see https://paystack.com/docs/guides/accept_payments_on_your_vue_app
+export const paystackpublickey = 'pk_test_ffffffffffffffffffffffffffffffffffffffff';
+
+export const defaultpaystackid = 'info@eddivolt.one';
 
 export const APPVERSION = '1.0.5';
 export const twodaymills = 172800000;

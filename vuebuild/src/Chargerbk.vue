@@ -124,6 +124,15 @@
               </div>
             </div>
           </div>
+          <div>ayoba_nickname:{{ayoba_presence}}</div>
+          <div>ayoba_nickname:{{ayoba_nickname}}</div>
+          <div>ayoba_avatar:{{ayoba_avatar}}</div>
+          <div>ayoba_msisdn:{{ayoba_msisdn}}</div>
+          <div>ayoba_selfjid:{{ayoba_selfjid}}</div>
+          <div>ayoba_countrycode:{{ayoba_countrycode}}</div>
+          <div>ayoba_lat:{{ayoba_lat}}</div>
+          <div>ayoba_lng:{{ayoba_lng}}</div>
+          <div>ayaba_language:{{ayoba_language}}</div>
           <b-button block class="mainbtn mt-3" variant="outline-info" @click="showhours">{{'ChargeTIME'|trans}}: {{thehours[hourid]}}{{'hors'|trans}}</b-button>
           <b-button block class="mainbtn mt-3" variant="info" :to="{path:'/login',query:{backid:chargerid}}" v-if="!mytoken">{{'btn_login'|trans}}</b-button>
           <b-button block class="mainbtn mt-3" variant="primary" @click="inputpays" v-if="mytoken && mybalnum<10">{{'btn_prepay'|trans}}</b-button>
@@ -149,28 +158,122 @@
           </div>
         </template>
         <template v-if="contentId==1">
-
+          <b-tabs content-class="mb-4" end>
+              <b-tab :title="$t('message.tabpaystack')" active>
+                <div class="weui-panel xnpanel mt-3 pt-4 pb-3">
+                  <div block class="text-right" style="margin-top:-10px">
+                  <b-icon block icon="x-circle" font-scale="1.5" variant="danger" @click="cancelpay"></b-icon>
+                  </div>
+                  <b-form-group style="margin-top:-20px;">
+                    <p>{{'payfullname'|trans}}</p>
+                    <b-form-input size="lg" type="text" v-model="payfullname" :placeholder="$t('message.hpayfullname')"
+                      required maxlength="32"></b-form-input>
+                  </b-form-group>
+                  <b-form-group>
+                    <p class="mt-2">{{'paymoneys'|trans}}</p>
+                    <b-form-input size="lg" type="text" v-model="payamount" required maxlength="8"></b-form-input>
+                  </b-form-group>
+                  <paystack class="pay" :amount="payamount*100" :email="payemail" :paystackkey="paystackpubkey"
+                    :reference="reference" :callback="paycallback" :close="payclose" :embed="false" :channels="channels" currency="GHS">
+                    {{'btn_prepay'|trans}}
+                  </paystack>
+                  <div class="mt-4 mb-3">
+                    <img src="images/paystack-gh.png" class="w-100"/>
+                  </div>
+                </div>
+              </b-tab>
+              <b-tab :title="$t('message.tabvcard')" @click="ff">
+              ffff
+              </b-tab>
+              <b-tab :title="$t('message.tabvcard')">
+                <div class="weui-panel xnpanel mt-3 pt-4 pb-3">
+                  <div block class="text-right" style="margin-top:-10px">
+                  <b-icon block icon="x-circle" font-scale="1.5" variant="danger" @click="cancelpay"></b-icon>
+                  </div>
+                  <b-form-group style="margin-top:-20px;" v-if="isagent==1">
+                    <p>{{'activetarget'|trans}}</p>
+                    <b-form-input size="lg" type="text" v-model="vcardtargetuser" required maxlength="32"></b-form-input>
+                  </b-form-group>
+                  <b-form-group>
+                    <p class="mt-2">{{'activecode'|trans}}</p>
+                    <b-form-input size="lg" type="text" v-model="vcardnumber" required maxlength="8"></b-form-input>
+                  </b-form-group>
+                  <b-button class="pay" variant="success" @click="activevcard" :disabled="vcardbtnclicked">
+                    {{vcardbtn_text}}
+                  </b-button>
+                  <div class="mt-4 mb-3">
+                    <img src="images/paystack-gh.png" class="w-100"/>
+                  </div>
+                </div>
+              </b-tab>
+          </b-tabs>
         </template>
       </div>
     </b-container>
 </div>
 </template>
 <script>
+  const getURLParameter = function(sParam) {
+    let sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+    for (i = 0; i < sURLVariables.length; i++) {
+      sParameterName = sURLVariables[i].split('=');
+      if (sParameterName[0] === sParam) {
+        return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+      }
+    }
+    return false;
+  };
+  const getAyoba = function() {
+     let userAgent = navigator.userAgent || navigator.vendor || window.opera;
+     // Windows Phone must come first because its UA also contains "Android"
+     if (/windows phone/i.test(userAgent)) {
+         return null;
+     }
+     if (/android/i.test(userAgent)) {
+         return 'Android';
+     }
+     // iOS detection from: http://stackoverflow.com/a/9039885/177710
+     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+         return null; // todo
+     }
+     return 'unknown';
+  }
+  let Ayoba = getAyoba();
+  import paystack from 'vue-paystack';
+  import { nanoid } from 'nanoid';
+  import { paystackpublickey } from '@/config';
+  import { prepaylimit } from '@/config';
+  import { defaultpaystackid } from '@/config';
   export default {
     name: 'chargerbk',
     components: {
+      paystack
     },
     mounted() {
+      this.fetchData();
     },
     computed: {
+      reference() {
+        return nanoid();
+      },
+      channels() {
+        return ["card", "bank", "ussd", "mobile_money"];
+      }
     },
     data() {
       return {
-        loads: 0,
+        paystackpubkey: paystackpublickey,
+        payfullname: localStorage.pfname,
+        payemail: defaultpaystackid,
+        payamount: localStorage.preprepay?localStorage.preprepay:prepaylimit,
+        loads: 1,
         disphours: false,
         keeploading: true,
         mac: undefined,
-        chargerid: this.$route.params.id,
+        chargerid: getURLParameter('id'),
         portid: -1,
         noclick: true,
         norefresh: false,
@@ -179,6 +282,9 @@
         btntext: 'ChargeNOW',
         myid: -1,
         isagent:0,
+        vcardtargetuser:'',
+        vcardnumber:'',
+        vcardbtn_text: this.$t('message.vcardactivenow'),
         mytoken: '',
         mynickname: '',
         mybalance: '0.00',
@@ -188,6 +294,15 @@
         charging: 0,
         loading: false,
         prid: 2,
+        ayoba_presence:'--',
+        ayoba_nickname:'none',
+        ayoba_avatar:'none',
+        ayoba_msisdn:'none',
+        ayoba_selfjid:'--',
+        ayoba_countrycode:'--',
+        ayoba_lat:0,
+        ayoba_lng:0,
+        ayoba_language:'--',
         prizz: ['-', '-', '-', '-', '-', '-'],
         priz6: [0, 30, '8:00', '22:00'],
         thehours: ['10', '1', '2', '3', '4', '6', '8', '15'],
@@ -199,6 +314,23 @@
       }
     },
     methods: {
+      async paycallback(response) {
+        this.contentId = 0;
+        let lotoken = localStorage.getItem('token');
+        let qryparams = 'token=' + lotoken + '&ref=' + response.reference;
+        await this.axios.post('/paystackcb?tm=' + new Date().getTime(), qryparams);
+        this.loads = 1;
+        if (!this.keeploading) {
+          this.fetchData();
+        }
+        localStorage.setItem('preprepay', this.payamount);
+        localStorage.setItem('pemail', this.payemail);
+        localStorage.setItem('pfname', this.payfullname);
+        this.authen();
+      },
+      payclose() {
+        this.contentId = 0;
+      },
       async fetchData() {
         let lotoken = localStorage.getItem('token');
         let qryparams = 'token=' + lotoken + '&loads=' + this.loads;
@@ -305,24 +437,6 @@
           this.fetchData();
         }
       },
-      async authen() {
-        let lotoken = localStorage.getItem('token');
-        if (lotoken) {
-          let loginparam = 'token=' + lotoken + '&tm=' + new Date().getTime();
-          let loginresult = await this.axios.post('/chargeauth?tm=' + new Date().getTime(), loginparam);
-          if (loginresult && loginresult.status == 200) {
-            let nickname = localStorage.getItem('nickname');
-            this.mytoken = lotoken;
-            this.mynickname = nickname;
-            this.mybalnum = loginresult.data.balnum;
-            this.mybalance = loginresult.data.balance;
-            this.isagent = loginresult.data.isagent;
-          } else {
-            localStorage.removeItem('token');
-            localStorage.removeItem('nickname');
-          }
-        }
-      },
       async showhours() {
         this.disphours = true;
       },
@@ -333,6 +447,49 @@
         this.hourid = parseInt(e.currentTarget.id);
         localStorage.horid = this.hourid;
         this.disphours = false;
+      },
+      async activevcard() {
+        this.vcardbtnclicked = true;
+        let lotoken = localStorage.getItem('token');
+        if ( Number(this.vcardnumber)+'' != this.vcardnumber ) {
+          this.vcardbtn_text = this.$t('message.vcardactiveer1');
+          setTimeout(() => { this.vcardbtnclicked = false; this.vcardbtn_text = this.$t('message.vcardactivenow'); }, 5000);
+        }
+        else if ( this.isagent==1 && this.vcardnumber.length!=4 ) {
+          this.vcardbtn_text = this.$t('message.vcardactiveer2');
+          setTimeout(() => { this.vcardbtnclicked = false; this.vcardbtn_text = this.$t('message.vcardactivenow'); }, 5000);
+        }
+        else if ( this.isagent==0 && this.vcardnumber.length!=8 ) {
+          this.vcardbtn_text = this.$t('message.vcardactiveer3');
+          setTimeout(() => { this.vcardbtnclicked = false; this.vcardbtn_text = this.$t('message.vcardactivenow'); }, 5000);
+        }
+        else if ( this.isagent==1 && this.vcardtargetuser.length<4 ) {
+          this.vcardbtn_text = this.$t('message.vcardactiveer4');
+          setTimeout(() => { this.vcardbtnclicked = false; this.vcardbtn_text = this.$t('message.vcardactivenow'); }, 5000);
+        }
+        else if ( this.isagent==1 && (this.vcardtargetuser.indexOf('@')<2||this.vcardtargetuser.indexOf('.')<4) ) {
+          this.vcardbtn_text = this.$t('message.vcardactiveer5');
+          setTimeout(() => { this.vcardbtnclicked = false; this.vcardbtn_text = this.$t('message.vcardactivenow'); }, 5000);
+        }
+        else {
+          let doparams = 'token=' + lotoken + '&cardid=' + this.vcardnumber;
+          let ret;
+          if ( this.isagent==1 ) {
+            doparams = doparams + '&to=' + this.vcardtargetuser;
+            ret = await this.axios.post('/vcardactive1?tm=' + new Date().getTime(), doparams);
+          } else {
+            ret = await this.axios.post('/vcardactive2?tm=' + new Date().getTime(), doparams);
+          }
+          if (ret && ret.status == 200) {
+            if ( ret.data.rc>0 ) {
+              this.contentId = 0;
+            } else {
+              this.vcardbtn_text = ret.data.rm;
+            }
+          } else {
+            this.vcardbtn_text = 'unknown error';
+          }
+        }
       },
       async dochargebk() {
         this.noclick = true;
@@ -353,6 +510,23 @@
         if (!this.keeploading) {
           this.fetchData();
         }
+      },
+      onPresenceChanged(presence) {
+        this.ayoba_presence = presence;
+        this.ayoba_msisdn = Ayoba.getMsisdn();
+        this.ayoba_selfjid = getURLParameter('jid');
+        this.ayoba_countrycode = Ayoba.getCountry();
+        this.ayoba_language = Ayoba.getLanguage();
+      },
+      onNicknameChanged(nickname) {
+        this.ayoba_nickname = nickname;
+      },
+      onAvatarChanged(avatar) {
+        this.ayoba_avatar = JSON.stringify(avatar);
+      },
+      onLocationChanged(lat, lon) {
+        this.ayoba_lat = lat;
+        this.ayoba_lng = lon;
       },
     }
   }
@@ -447,77 +621,7 @@
     margin:0 auto;
     line-height: 4rem;
     font-size: 2rem;
-  }
-  @media only screen and (orientation: portrait) {
-    .pbox {
-      padding: 3vw;
-      border-bottom: 1px solid #ddd;
-    }
-    .w-ama {
-      width: 19vw;
-      height: 19vw;
-    }
-    .pickw {
-      width:100vw;
-    }
-    .w-amb {
-      width: 13vw;
-      height: 13vw;
-      top: 3vw;
-    }
-    .fixed {
-      background-image: url(/images/socket.png);
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
-      font-size: 9vw;
-    }
-    .tinyst {
-      margin-top:5vw;
-      font-size: 2vw;
-      color: #bbb;
-    }
-    .mainbtn {
-        width:90%;
-        margin:0 auto;
-        line-height: 12vw;
-        font-size: 6vw;
-    }
-  }
-  @media only screen and (orientation: landscape) {
-    .boxw {
-      width: 500px;
-    }
-    .pbox {
-      padding: 20px;
-      border-bottom: 1px solid #ddd;
-    }
-    .w-ama {
-      width: 80px;
-      height: 80px;
-    }
-    .pickw {
-      width:500px;
-    }
-    .w-amb {
-      width: 60px;
-      height: 60px;
-      top: 10px;
-    }
-    .fixed {
-      background-image: url(/images/socket.png);
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
-      font-size: 40px;
-    }
-    .tinyst {
-      margin-top:14px;
-      font-size: 0.5rem;
-      color: #bbb;
-    }
-  }
-  
+  }  
   .devbox1 {
     margin: 0 auto;
   }
@@ -579,5 +683,135 @@
   .li2 {
     display: flex;
     justify-content: space-between;
+  }
+  .lnk{color:rgba(0,102,0,0.5);}
+  .offlin {background-color:#D3D3D3;filter:Alpha(Opacity=60);opacity:0.6;color:#666}
+  .xnpanel {
+    padding-left:4vw;
+    padding-right:4vw;
+    border-radius: 15px;
+    border: 1px solid #B3B3B3;
+    box-shadow: 10px 20px 10px rgba(0, 0, 0, .8);
+    z-index: 1000;
+  }
+  .xnshadow {
+    box-shadow: 10px 10px 20px rgba(51, 51, 51, .4);
+  }
+  .fullmask {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 9994;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  .midline {
+    text-decoration: line-through;
+  }
+  a.disabled {
+    pointer-events: none;
+    color: rgba(51, 51, 51, 0.3);
+  }
+  .grecaptcha-badge {
+      display: none; 
+  }
+  .cheader {
+    line-height: 4rem;
+    font-size: 1.6rem;
+    margin-right: 1rem;
+  }
+  .chead2 {
+    line-height: 4rem;
+    font-size: 1.6rem;
+  }
+  .mybtn {}
+  @media only screen and (orientation: portrait) {
+    .cheader {
+      line-height: 10vw;
+      font-size: 6vw;
+      margin-right: 2vw;
+    }
+    .mybtn {
+      line-height: 5vw;
+      font-size: 4vw;
+    }
+    .chead2 {
+      line-height: 10vw;
+      font-size: 5vw;
+    }
+    .pbox {
+      padding: 3vw;
+      border-bottom: 1px solid #ddd;
+    }
+    .w-ama {
+      width: 19vw;
+      height: 19vw;
+    }
+    .pickw {
+      width:100vw;
+    }
+    .w-amb {
+      width: 13vw;
+      height: 13vw;
+      top: 3vw;
+    }
+    .fixed {
+      background-image: url(/images/socket.png);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      font-size: 9vw;
+    }
+    .tinyst {
+      margin-top:5vw;
+      font-size: 2vw;
+      color: #bbb;
+    }
+    .mainbtn {
+        width:90%;
+        margin:0 auto;
+        line-height: 12vw;
+        font-size: 6vw;
+    }
+  }
+  .opacity {background-color: rgba(255,255,255,0.8);}
+  .mypicker{background-color:rgba(153,153,153,0.9)}
+  @media (prefers-color-scheme: dark) {
+    .opacity {background-color: rgba(0,0,0,0.8);}
+    .mypicker{background-color:rgba(102,102,102,0.9);}
+  }
+  @media only screen and (orientation: landscape) {
+    .boxw {
+      width: 500px;
+    }
+    .pbox {
+      padding: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+    .w-ama {
+      width: 80px;
+      height: 80px;
+    }
+    .pickw {
+      width:500px;
+    }
+    .w-amb {
+      width: 60px;
+      height: 60px;
+      top: 10px;
+    }
+    .fixed {
+      background-image: url(/images/socket.png);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      font-size: 40px;
+    }
+    .tinyst {
+      margin-top:14px;
+      font-size: 0.5rem;
+      color: #bbb;
+    }
   }
 </style>

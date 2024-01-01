@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import App from './App.vue'
-import router from './router'
+import Chargerbk from './Chargerbk.vue'
 import {
   BootstrapVue,
   IconsPlugin,
@@ -80,8 +79,7 @@ Vue.filter('trans', function (engstr) {
 
 new Vue({
   i18n,
-  router,
-  render: h => h(App),
+  render: h => h(Chargerbk),
   data() {return {};},
   methods: {}
-}).$mount('#h5app');
+}).$mount('#app1');
