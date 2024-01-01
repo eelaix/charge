@@ -294,9 +294,9 @@
       async dologin(){
         this.ayoba_selfjid = getURLParameter('jid');
         this.ayoba_msisdn = getUserPhoneNumber();
-        this.ayoba_presence = observeUserPresence();
-        this.ayoba_nickname = getUserName();
-        this.ayoba_avatar = getUserAvatar();
+        observeUserPresence((online) => {this.ayoba_presence = online;});
+        getUserName((username) => {this.yoba_nickname = username;});
+        getUserAvatar((avatar) => {this.ayoba_avatar = avatar;});
       },
       // observeUserPresence(online) {
       //   this.ayoba_presence = online;
