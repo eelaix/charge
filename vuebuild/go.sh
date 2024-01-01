@@ -5,5 +5,5 @@ echo  npm run serve
 echo  npm run build:prod -- --dest=../dist2
 echo  cp -rf dist/* ..
 npm install --save
-npm run build:prod -- --dest=../docs
+npm run build -- --dest=../docs
 cp -rf dist/* ..

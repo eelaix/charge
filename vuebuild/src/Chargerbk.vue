@@ -129,8 +129,6 @@
           <div>ayoba_avatar:{{ayoba_avatar}}</div>
           <div>ayoba_msisdn:{{ayoba_msisdn}}</div>
           <div>ayoba_selfjid:{{ayoba_selfjid}}</div>
-          <div>ayoba_countrycode:{{ayoba_countrycode}}</div>
-          <div>ayaba_language:{{ayoba_language}}</div>
           <b-button block class="mainbtn mt-3" variant="outline-info" @click="showhours">{{'ChargeTIME'|trans}}: {{thehours[hourid]}}{{'hors'|trans}}</b-button>
           <b-button block class="mainbtn mt-3" variant="info" @click="dologin">{{'btn_login'|trans}}</b-button>
           <b-button block class="mainbtn mt-3" variant="primary" @click="inputpays" v-if="mytoken && mybalnum<10">{{'btn_prepay'|trans}}</b-button>
@@ -210,7 +208,6 @@
     </b-container>
 </div>
 </template>
-<script src="microapp.js"></script>
 <script>
   const getURLParameter = function(sParam) {
     let sPageURL = window.location.search.substring(1),
@@ -230,6 +227,7 @@
   import { paystackpublickey } from '@/config';
   import { prepaylimit } from '@/config';
   import { defaultpaystackid } from '@/config';
+  import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar } from 'ayoba-microapp-api';
   export default {
     name: 'chargerbk',
     components: {
@@ -277,13 +275,11 @@
         charging: 0,
         loading: false,
         prid: 2,
-        ayoba_presence:aobj.ayoba_presence,
-        ayoba_nickname:aobj.ayoba_nickname,
-        ayoba_avatar:aobj.ayoba_avatar,
-        ayoba_msisdn:aobj.ayoba_msisdn,
-        ayoba_selfjid:aobj.ayoba_selfjid,
-        ayoba_countrycode:aobj.ayoba_countrycode,
-        ayoba_language:aobj.ayoba_language,
+        ayoba_presence:'',
+        ayoba_nickname:'',
+        ayoba_avatar:'',
+        ayoba_msisdn:'',
+        ayoba_selfjid:'',
         prizz: ['-', '-', '-', '-', '-', '-'],
         priz6: [0, 30, '8:00', '22:00'],
         thehours: ['10', '1', '2', '3', '4', '6', '8', '15'],
@@ -295,6 +291,19 @@
       }
     },
     methods: {
+      async dologin(){
+        this.ayoba_selfjid = getURLParameter('jid');
+        this.ayoba_msisdn = getUserPhoneNumber();
+        observeUserPresence(
+          (online) => { this.ayoba_presence = online; }
+        );
+        getUserName(
+          (username) => { this.ayoba_nickname = username; }
+        );
+        getUserAvatar(
+          (avatar) => { this.ayoba_avatar = avatar; }
+        );
+      },
       async paycallback(response) {
         this.contentId = 0;
         let lotoken = localStorage.getItem('token');
@@ -402,15 +411,6 @@
         this.portid = id;
         this.btntext = txt;
         this.noclick = neverclick;
-      },
-      dologin() {
-        this.ayoba_presence=aobj.ayoba_presence;
-        this.ayoba_nickname=aobj.ayoba_nickname;
-        this.ayoba_avatar=aobj.ayoba_avatar;
-        this.ayoba_msisd=aobj.ayoba_msisdn;
-        this.ayoba_selfjid=aobj.ayoba_selfjid;
-        this.ayoba_countrycode=aobj.ayoba_countrycode;
-        this.ayoba_language=aobj.ayoba_language;
       },
       inputpays() {
         this.contentId = 1;
