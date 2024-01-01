@@ -242,7 +242,7 @@
     },
     mounted() {
       // closeApp();
-      this.fetchData();
+      // this.fetchData();
     },
     computed: {
       reference() {
