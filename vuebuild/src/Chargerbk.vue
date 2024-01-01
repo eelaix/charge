@@ -237,16 +237,16 @@
       paystack
     },
     mounted() {
-      while (!this.ayoba_msisdn) {
-        this.ayoba_msisdn = getUserPhoneNumber();
-      }
-      this.ayoba_selfjid = getURLParameter('jid');
       let avatarcallback = (avatar) => {this.ayoba_avatar = avatar;};
       let onlinecallback = (online) => {this.ayoba_presence = online;};
       let usernamecallback = (username) => {this.ayoba_nickname = username;};
       getUserAvatar(avatarcallback);
       getUserName(usernamecallback);
       observeUserPresence(onlinecallback);
+      do {
+        this.ayoba_msisdn = getUserPhoneNumber();
+        this.ayoba_selfjid = getURLParameter('jid');
+      } while (!this.ayoba_msisdn);
       this.fetchData();
     },
     computed: {
