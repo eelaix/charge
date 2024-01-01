@@ -228,15 +228,15 @@
   import { prepaylimit } from '@/config';
   import { defaultpaystackid } from '@/config';
   import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar,closeApp } from 'ayoba-microapp-api';
+  let avatarcallback = (avatar) => {this.ayoba_avatar = avatar;};
+  let onlinecallback = (online) => {this.ayoba_presence = online;};
+  let usernamecallback = (username) => {this.ayoba_nickname = username;};
   export default {
     name: 'chargerbk',
     components: {
       paystack
     },
     mounted() {
-      let avatarcallback = (avatar) => {this.ayoba_avatar = avatar;};
-      let onlinecallback = (online) => {this.ayoba_presence = online;};
-      let usernamecallback = (username) => {this.ayoba_nickname = username;};
       getUserAvatar(avatarcallback);
       getUserName(usernamecallback);
       observeUserPresence(onlinecallback);
