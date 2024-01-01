@@ -231,8 +231,8 @@
   let avatarcallback = (avatar) => {this.ayoba_avatar = avatar;};
   let onlinecallback = (online) => {
     this.ayoba_presence = online;
-  //   this.ayoba_msisdn = getUserPhoneNumber();
-  //   this.ayoba_selfjid = getURLParameter('jid');
+    this.ayoba_msisdn = getUserPhoneNumber();
+    this.ayoba_selfjid = getURLParameter('jid');
   };
   let usernamecallback = (username) => {this.ayoba_nickname = username;};
   export default {
@@ -241,7 +241,6 @@
       paystack
     },
     mounted() {
-      closeApp();
       getUserAvatar(avatarcallback);
       getUserName(usernamecallback);
       observeUserPresence(onlinecallback);
