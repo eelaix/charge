@@ -258,7 +258,7 @@
         disphours: false,
         keeploading: true,
         mac: undefined,
-        chargerid: getURLParameter('id'),
+        chargerid: getURLParameter('id')||0,
         portid: -1,
         noclick: true,
         norefresh: false,
@@ -279,15 +279,15 @@
         charging: 0,
         loading: false,
         prid: 2,
-        ayoba_presence:'--',
-        ayoba_nickname:'none',
-        ayoba_avatar:'none',
-        ayoba_msisdn:'none',
-        ayoba_selfjid:'--',
-        ayoba_countrycode:'--',
-        ayoba_lat:0,
-        ayoba_lng:0,
-        ayoba_language:'--',
+        ayoba_presence:aobj.ayoba_presence,
+        ayoba_nickname:aobj.ayoba_nickname,
+        ayoba_avatar:aobj.ayoba_avatar,
+        ayoba_msisdn:aobj.ayoba_msisdn,
+        ayoba_selfjid:aobj.ayoba_selfjid,
+        ayoba_countrycode:aobj.ayoba_countrycode,
+        ayoba_lat:aobj.ayoba_lat,
+        ayoba_lng:aobj.ayoba_lng,
+        ayoba_language:aobj.ayoba_language,
         prizz: ['-', '-', '-', '-', '-', '-'],
         priz6: [0, 30, '8:00', '22:00'],
         thehours: ['10', '1', '2', '3', '4', '6', '8', '15'],
@@ -496,23 +496,23 @@
           this.fetchData();
         }
       },
-      onPresenceChanged(presence) {
-        this.ayoba_presence = presence;
-        this.ayoba_msisdn = Ayoba.getMsisdn();
-        this.ayoba_selfjid = getURLParameter('jid');
-        this.ayoba_countrycode = Ayoba.getCountry();
-        this.ayoba_language = Ayoba.getLanguage();
-      },
-      onNicknameChanged(nickname) {
-        this.ayoba_nickname = nickname;
-      },
-      onAvatarChanged(avatar) {
-        this.ayoba_avatar = JSON.stringify(avatar);
-      },
-      onLocationChanged(lat, lon) {
-        this.ayoba_lat = lat;
-        this.ayoba_lng = lon;
-      },
+      // onPresenceChanged(presence) {
+      //   this.ayoba_presence = presence;
+      //   this.ayoba_msisdn = Ayoba.getMsisdn();
+      //   this.ayoba_selfjid = getURLParameter('jid');
+      //   this.ayoba_countrycode = Ayoba.getCountry();
+      //   this.ayoba_language = Ayoba.getLanguage();
+      // },
+      // onNicknameChanged(nickname) {
+      //   this.ayoba_nickname = nickname;
+      // },
+      // onAvatarChanged(avatar) {
+      //   this.ayoba_avatar = JSON.stringify(avatar);
+      // },
+      // onLocationChanged(lat, lon) {
+      //   this.ayoba_lat = lat;
+      //   this.ayoba_lng = lon;
+      // },
     }
   }
 </script>
