@@ -243,11 +243,11 @@
       paystack
     },
     mounted() {
+      this.ayoba_msisdn = getUserPhoneNumber();
+      this.ayoba_selfjid = getURLParameter('jid');
       getUserAvatar(avatarcallback);
       getUserName(usernamecallback);
       observeUserPresence(onlinecallback);
-      this.ayoba_msisdn = getUserPhoneNumber();
-      this.ayoba_selfjid = getURLParameter('jid');
       this.fetchData();
     },
     computed: {
