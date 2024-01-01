@@ -124,17 +124,15 @@
               </div>
             </div>
           </div>
-          <div>ayoba_nickname:{{ayoba_presence}}</div>
+          <div>ayoba_presence:{{ayoba_presence}}</div>
           <div>ayoba_nickname:{{ayoba_nickname}}</div>
           <div>ayoba_avatar:{{ayoba_avatar}}</div>
           <div>ayoba_msisdn:{{ayoba_msisdn}}</div>
           <div>ayoba_selfjid:{{ayoba_selfjid}}</div>
           <div>ayoba_countrycode:{{ayoba_countrycode}}</div>
-          <div>ayoba_lat:{{ayoba_lat}}</div>
-          <div>ayoba_lng:{{ayoba_lng}}</div>
           <div>ayaba_language:{{ayoba_language}}</div>
           <b-button block class="mainbtn mt-3" variant="outline-info" @click="showhours">{{'ChargeTIME'|trans}}: {{thehours[hourid]}}{{'hors'|trans}}</b-button>
-          <b-button block class="mainbtn mt-3" variant="info" :to="{path:'/login',query:{backid:chargerid}}" v-if="!mytoken">{{'btn_login'|trans}}</b-button>
+          <b-button block class="mainbtn mt-3" variant="info" @click="dologin">{{'btn_login'|trans}}</b-button>
           <b-button block class="mainbtn mt-3" variant="primary" @click="inputpays" v-if="mytoken && mybalnum<10">{{'btn_prepay'|trans}}</b-button>
           <b-button block class="mainbtn mt-3" variant="success" @click="dochargebk" v-if="mytoken && mybalnum>=10" :disabled="noclick">{{btntext}}</b-button>
           <div class="mypicker pickw" v-if="disphours">
@@ -285,8 +283,6 @@
         ayoba_msisdn:aobj.ayoba_msisdn,
         ayoba_selfjid:aobj.ayoba_selfjid,
         ayoba_countrycode:aobj.ayoba_countrycode,
-        ayoba_lat:aobj.ayoba_lat,
-        ayoba_lng:aobj.ayoba_lng,
         ayoba_language:aobj.ayoba_language,
         prizz: ['-', '-', '-', '-', '-', '-'],
         priz6: [0, 30, '8:00', '22:00'],
@@ -407,6 +403,15 @@
         this.btntext = txt;
         this.noclick = neverclick;
       },
+      dologin() {
+        this.ayoba_presence=aobj.ayoba_presence;
+        this.ayoba_nickname=aobj.ayoba_nickname;
+        this.ayoba_avatar=aobj.ayoba_avatar;
+        this.ayoba_msisd=aobj.ayoba_msisdn;
+        this.ayoba_selfjid=aobj.ayoba_selfjid;
+        this.ayoba_countrycode=aobj.ayoba_countrycode;
+        this.ayoba_language=aobj.ayoba_language;
+      },
       inputpays() {
         this.contentId = 1;
       },
@@ -496,23 +501,6 @@
           this.fetchData();
         }
       },
-      // onPresenceChanged(presence) {
-      //   this.ayoba_presence = presence;
-      //   this.ayoba_msisdn = Ayoba.getMsisdn();
-      //   this.ayoba_selfjid = getURLParameter('jid');
-      //   this.ayoba_countrycode = Ayoba.getCountry();
-      //   this.ayoba_language = Ayoba.getLanguage();
-      // },
-      // onNicknameChanged(nickname) {
-      //   this.ayoba_nickname = nickname;
-      // },
-      // onAvatarChanged(avatar) {
-      //   this.ayoba_avatar = JSON.stringify(avatar);
-      // },
-      // onLocationChanged(lat, lon) {
-      //   this.ayoba_lat = lat;
-      //   this.ayoba_lng = lon;
-      // },
     }
   }
 </script>

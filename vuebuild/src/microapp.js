@@ -1,5 +1,5 @@
 var Ayoba = getAyoba();
-var aobj = {};
+var aobj = {ayoba_presence:0,ayoba_msisdn:'-',ayoba_selfjid:'-',ayoba_countrycode:'-',ayoba_language:'-',ayoba_nickname:'-',ayoba_avatar:'logo.png'};
  
 /**
 * Determine the mobile operating system and returns the
@@ -20,6 +20,19 @@ function getAyoba() {
    }
    return "unknown";
 };
+function getURLParameter(sParam) {
+  var sPageURL = window.location.search.substring(1),
+      sURLVariables = sPageURL.split('&'),
+      sParameterName,
+      i;
+  for (i = 0; i < sURLVariables.length; i++) {
+    sParameterName = sURLVariables[i].split('=');
+    if (sParameterName[0] === sParam) {
+      return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+    }
+  }
+  return false;
+};
 function onPresenceChanged(presence) {
   aobj.ayoba_presence = presence;
   aobj.ayoba_msisdn = Ayoba.getMsisdn();
@@ -31,9 +44,5 @@ function onNicknameChanged(nickname) {
   aobj.ayoba_nickname = nickname;
 };
 function onAvatarChanged(avatar) {
-  aobj.ayoba_avatar = JSON.stringify(avatar);
-};
-function onLocationChanged(lat, lon) {
-  aobj.ayoba_lat = lat;
-  aobj.ayoba_lng = lon;
+  aobj.ayoba_avatar = avatar;
 };
