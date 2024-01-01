@@ -228,6 +228,15 @@
   import { prepaylimit } from '@/config';
   import { defaultpaystackid } from '@/config';
   import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar } from 'ayoba-microapp-api';
+  let avatarcallback = (avatar) => {
+    this.ayoba_avatar = avatar;
+  };
+  let usernamecallback = (username) => {
+    this.ayoba_nickname = username;
+  };
+  let onlinecallback = (online) => {
+    this.ayoba_presence = online;
+  }
   export default {
     name: 'chargerbk',
     components: {
@@ -292,15 +301,6 @@
     },
     methods: {
       async dologin(){
-        let avatarcallback = (avatar) => {
-          this.ayoba_avatar = avatar;
-        };
-        let usernamecallback = (username) => {
-          this.ayoba_nickname = username;
-        };
-        let onlinecallback = (online) => {
-          this.ayoba_presence = online;
-        };
         this.ayoba_selfjid = getURLParameter('jid');
         this.ayoba_msisdn = getUserPhoneNumber();
         getUserAvatar(avatarcallback);
