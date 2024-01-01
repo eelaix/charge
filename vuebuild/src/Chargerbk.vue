@@ -234,6 +234,9 @@
       paystack
     },
     mounted() {
+      getUserAvatar((avatar) => {this.ayoba_avatar = avatar;});
+      getUserName((username) => {this.ayoba_nickname = username;});
+      observeUserPresence((online) => {this.ayoba_presence = online;});
       this.fetchData();
     },
     computed: {
@@ -294,19 +297,7 @@
       async dologin(){
         this.ayoba_selfjid = getURLParameter('jid');
         this.ayoba_msisdn = getUserPhoneNumber();
-        this.ayoba_presence = observeUserPresence();
-        this.ayoba_nickname = getUserName();
-        this.ayoba_avatar = getUserAvatar();
       },
-      // observeUserPresence(online) {
-      //   this.ayoba_presence = online;
-      // },
-      // getUserName(username) {
-      //   this.ayoba_nickname = username;
-      // },
-      // getUserAvatar(avatar) {
-      //   this.ayoba_avatar = avatar;
-      // },
       async paycallback(response) {
         this.contentId = 0;
         let lotoken = localStorage.getItem('token');
