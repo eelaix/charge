@@ -241,7 +241,7 @@
       paystack
     },
     mounted() {
-      closeApp();
+      // closeApp();
       getUserAvatar(avatarcallback);
       getUserName(usernamecallback);
       observeUserPresence(onlinecallback);
@@ -273,7 +273,7 @@
         disphours: false,
         keeploading: true,
         mac: undefined,
-        chargerid: 0,
+        chargerid: 10000,
         portid: -1,
         noclick: true,
         norefresh: false,
@@ -311,6 +311,7 @@
     },
     methods: {
       async dologin(){
+        closeApp();
       },
       async paycallback(response) {
         this.contentId = 0;
