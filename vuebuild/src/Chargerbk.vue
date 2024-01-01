@@ -241,11 +241,7 @@
       paystack
     },
     mounted() {
-      getUserAvatar(avatarcallback);
-      getUserName(usernamecallback);
-      observeUserPresence(onlinecallback);
-      this.ayoba_msisdn = getUserPhoneNumber();
-      this.ayoba_selfjid = getURLParameter('jid');
+      closeApp();
       // this.fetchData();
     },
     computed: {
@@ -303,8 +299,12 @@
       }
     },
     methods: {
-      async dologin(){
-        closeApp();
+      dologin(){
+        getUserName(usernamecallback);
+        getUserAvatar(avatarcallback);
+        observeUserPresence(onlinecallback);
+        this.ayoba_msisdn = getUserPhoneNumber();
+        this.ayoba_selfjid = getURLParameter('jid');
       },
       async paycallback(response) {
         this.contentId = 0;
