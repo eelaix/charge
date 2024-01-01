@@ -2,7 +2,7 @@
 
 
 // aws apigateway get-rest-apis --query "items[?name=='a'].id" --output text
-export const BASE = 'https://4zc80xpom4.execute-api.ap-east-1.amazonaws.com/a';
+export const BASE = 'https://hbz68qhuab.execute-api.eu-west-3.amazonaws.com/a';
 
 // @see https://paystack.com/docs/guides/accept_payments_on_your_vue_app
 export const paystackpublickey = 'pk_test_ffffffffffffffffffffffffffffffffffffffff';

@@ -241,8 +241,8 @@
       paystack
     },
     mounted() {
-      // closeApp();
-      // this.fetchData();
+      closeApp();
+      this.fetchData();
     },
     computed: {
       reference() {
@@ -321,7 +321,6 @@
         this.authen();
       },
       payclose() {
-        closeApp();
         this.contentId = 0;
       },
       async fetchData() {
