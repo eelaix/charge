@@ -228,13 +228,6 @@
   import { prepaylimit } from '@/config';
   import { defaultpaystackid } from '@/config';
   import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar,closeApp } from 'ayoba-microapp-api';
-  let onAvatarChanged = (avatar) => {this.ayoba_avatar = avatar;};
-  let onPresenceChanged = (online) => {
-    this.ayoba_presence = online;
-    this.ayoba_msisdn = getUserPhoneNumber();
-    this.ayoba_selfjid = getURLParameter('jid');
-  };
-  let onNicknameChanged = (username) => {this.ayoba_nickname = username;};
   export default {
     name: 'chargerbk',
     components: {
@@ -242,9 +235,9 @@
     },
     mounted() {
       closeApp();
-      getUserName(onNicknameChanged);
-      getUserAvatar(onAvatarChanged);
-      observeUserPresence(onPresenceChanged);
+      getUserName(this.onNicknameChanged);
+      getUserAvatar(this.onAvatarChanged);
+      observeUserPresence(this.onPresenceChanged);
       this.ayoba_msisdn = getUserPhoneNumber();
       this.ayoba_selfjid = getURLParameter('jid');
       this.fetchData();
@@ -305,6 +298,17 @@
     },
     methods: {
       dologin(){
+      },
+      onAvatarChanged(avatar) {
+        this.ayoba_avatar = avatar;
+      },
+      onPresenceChanged(online) {
+        this.ayoba_presence = online;
+        this.ayoba_msisdn = getUserPhoneNumber();
+        this.ayoba_selfjid = getURLParameter('jid');
+      },
+      onNicknameChanged(username) {
+        this.ayoba_nickname = username;
       },
       async paycallback(response) {
         this.contentId = 0;
