@@ -306,6 +306,7 @@
     },
     methods: {
       dologin(){
+        console.log('dologin');
       },
       async paycallback(response) {
         this.contentId = 0;
