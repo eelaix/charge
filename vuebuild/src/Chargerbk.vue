@@ -231,15 +231,16 @@
   import { observeUserPresence } from 'ayoba-microapp-api';
   import { getUserName } from 'ayoba-microapp-api';
   import { getUserAvatar } from 'ayoba-microapp-api';
-  // import { closeApp } from 'ayoba-microapp-api';
+  import { closeApp } from 'ayoba-microapp-api';
   export default {
     name: 'chargerbk',
     components: {
       paystack
     },
     mounted() {
-      // closeApp();
+      console.log('mounted before fetchData');
       this.fetchData();
+      console.log('mounted after fetchData');
     },
     computed: {
       reference() {
@@ -297,11 +298,19 @@
     },
     methods: {
       dologin(){
+        console.log('login closeApp()');
+        closeApp();
+        console.log('login getUserName()');
         getUserName((username) => { this.ayoba_nickname = username; });
+        console.log('login getUserAvatar()');
         getUserAvatar((avatar) => { this.ayoba_avatar = avatar; });
+        console.log('login observeUserPresence()');
         observeUserPresence((online) => { this.ayoba_presence = online; this.ayoba_msisdn = getUserPhoneNumber(); this.ayoba_selfjid = getURLParameter('jid'); });
+        console.log('login getUserPhoneNumber()');
         this.ayoba_msisdn = getUserPhoneNumber();
+        console.log('login ayoba_selfjid');
         this.ayoba_selfjid = getURLParameter('jid');
+        console.log('login over');
       },
       async paycallback(response) {
         this.contentId = 0;
