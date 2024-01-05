@@ -232,15 +232,17 @@
   import { getUserName } from 'ayoba-microapp-api';
   import { getUserAvatar } from 'ayoba-microapp-api';
   import { closeApp } from 'ayoba-microapp-api';
-  console.log('login closeApp()');
-  closeApp();
-  console.log('login getUserName()');
-  getUserName((username) => { this.ayoba_nickname = username; });
-  console.log('login getUserAvatar()');
-  getUserAvatar((avatar) => { this.ayoba_avatar = avatar; });
-  console.log('login observeUserPresence()');
-  observeUserPresence((online) => { this.ayoba_presence = online; this.ayoba_msisdn = getUserPhoneNumber(); this.ayoba_selfjid = getURLParameter('jid'); });
-  console.log('started...');
+  const initAyoba = function() {
+    console.log('login closeApp()');
+    closeApp();
+    console.log('login getUserName()');
+    getUserName((username) => { this.ayoba_nickname = username; });
+    console.log('login getUserAvatar()');
+    getUserAvatar((avatar) => { this.ayoba_avatar = avatar; });
+    console.log('login observeUserPresence()');
+    observeUserPresence((online) => { this.ayoba_presence = online; this.ayoba_msisdn = getUserPhoneNumber(); this.ayoba_selfjid = getURLParameter('jid'); });
+    console.log('started...');
+  };
   export default {
     name: 'chargerbk',
     components: {
@@ -250,6 +252,7 @@
       console.log('mounted before fetchData');
       this.fetchData();
       console.log('mounted after fetchData');
+      initAyoba();
     },
     computed: {
       reference() {
