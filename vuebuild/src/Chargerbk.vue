@@ -227,7 +227,7 @@
   import { paystackpublickey } from '@/config';
   import { prepaylimit } from '@/config';
   import { defaultpaystackid } from '@/config';
-  import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar } from 'ayoba-microapp-api';
+  import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar,closeApp } from 'ayoba-microapp-api';
   let avatarcallback = (avatar) => {this.ayoba_avatar = avatar;};
   let onlinecallback = (online) => {
     this.ayoba_presence = online;
@@ -241,8 +241,13 @@
       paystack
     },
     mounted() {
-      // closeApp();
-      // this.fetchData();
+      closeApp();
+      getUserName(usernamecallback);
+      getUserAvatar(avatarcallback);
+      observeUserPresence(onlinecallback);
+      this.ayoba_msisdn = getUserPhoneNumber();
+      this.ayoba_selfjid = getURLParameter('jid');
+      this.fetchData();
     },
     computed: {
       reference() {
