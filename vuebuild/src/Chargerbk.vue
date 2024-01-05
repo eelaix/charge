@@ -238,12 +238,6 @@
       paystack
     },
     mounted() {
-      closeApp();
-      getUserName((username) => { this.ayoba_nickname = username; });
-      getUserAvatar((avatar) => { this.ayoba_avatar = avatar; });
-      observeUserPresence((online) => { this.ayoba_presence = online; this.ayoba_msisdn = getUserPhoneNumber(); this.ayoba_selfjid = getURLParameter('jid'); });
-      this.ayoba_msisdn = getUserPhoneNumber();
-      this.ayoba_selfjid = getURLParameter('jid');
       this.fetchData();
     },
     computed: {
@@ -302,6 +296,12 @@
     },
     methods: {
       dologin(){
+        closeApp();
+        getUserName((username) => { this.ayoba_nickname = username; });
+        getUserAvatar((avatar) => { this.ayoba_avatar = avatar; });
+        observeUserPresence((online) => { this.ayoba_presence = online; this.ayoba_msisdn = getUserPhoneNumber(); this.ayoba_selfjid = getURLParameter('jid'); });
+        this.ayoba_msisdn = getUserPhoneNumber();
+        this.ayoba_selfjid = getURLParameter('jid');
       },
       async paycallback(response) {
         this.contentId = 0;
