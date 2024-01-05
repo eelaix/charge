@@ -231,14 +231,14 @@
   import { observeUserPresence } from 'ayoba-microapp-api';
   import { getUserName } from 'ayoba-microapp-api';
   import { getUserAvatar } from 'ayoba-microapp-api';
-  import { closeApp } from 'ayoba-microapp-api';
+  // import { closeApp } from 'ayoba-microapp-api';
   export default {
     name: 'chargerbk',
     components: {
       paystack
     },
     mounted() {
-      closeApp();
+      // closeApp();
       this.fetchData();
     },
     computed: {
