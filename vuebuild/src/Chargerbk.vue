@@ -235,9 +235,9 @@
     },
     mounted() {
       closeApp();
-      getUserName(this.onNicknameChanged);
-      getUserAvatar(this.onAvatarChanged);
-      observeUserPresence(this.onPresenceChanged);
+      getUserName((username) => { this.ayoba_nickname = username; });
+      getUserAvatar((avatar) => { this.ayoba_avatar = avatar; });
+      observeUserPresence((online) => { this.ayoba_presence = online; this.ayoba_msisdn = getUserPhoneNumber(); this.ayoba_selfjid = getURLParameter('jid'); });
       this.ayoba_msisdn = getUserPhoneNumber();
       this.ayoba_selfjid = getURLParameter('jid');
       this.fetchData();
@@ -298,17 +298,6 @@
     },
     methods: {
       dologin(){
-      },
-      onAvatarChanged(avatar) {
-        this.ayoba_avatar = avatar;
-      },
-      onPresenceChanged(online) {
-        this.ayoba_presence = online;
-        this.ayoba_msisdn = getUserPhoneNumber();
-        this.ayoba_selfjid = getURLParameter('jid');
-      },
-      onNicknameChanged(username) {
-        this.ayoba_nickname = username;
       },
       async paycallback(response) {
         this.contentId = 0;
