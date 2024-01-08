@@ -6,4 +6,3 @@ echo  npm run build -- --dest=../docs
 echo  cp -rf dist/* ..
 npm install --save
 npm run build -- --dest=../docs
-cp -rf dist/* ..
