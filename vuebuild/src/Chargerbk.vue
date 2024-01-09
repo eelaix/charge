@@ -209,29 +209,29 @@
 </div>
 </template>
 <script>
-  // const getURLParameter = function(sParam) {
-  //   let sPageURL = window.location.search.substring(1),
-  //       sURLVariables = sPageURL.split('&'),
-  //       sParameterName,
-  //       i;
-  //   for (i = 0; i < sURLVariables.length; i++) {
-  //     sParameterName = sURLVariables[i].split('=');
-  //     if (sParameterName[0] === sParam) {
-  //       return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
-  //     }
-  //   }
-  //   return false;
-  // };
+  const getURLParameter = function(sParam) {
+    let sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+    for (i = 0; i < sURLVariables.length; i++) {
+      sParameterName = sURLVariables[i].split('=');
+      if (sParameterName[0] === sParam) {
+        return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+      }
+    }
+    return false;
+  };
   import paystack from 'vue-paystack';
   import { nanoid } from 'nanoid';
   import { paystackpublickey } from '@/config';
   import { prepaylimit } from '@/config';
   import { defaultpaystackid } from '@/config';
-  // import { getUserPhoneNumber } from 'ayoba-microapp-api';
-  // import { observeUserPresence } from 'ayoba-microapp-api';
-  // import { getUserName } from 'ayoba-microapp-api';
-  // import { getUserAvatar } from 'ayoba-microapp-api';
-  // import { closeApp } from 'ayoba-microapp-api';
+  import { getUserPhoneNumber } from 'ayoba-microapp-api';
+  import { observeUserPresence } from 'ayoba-microapp-api';
+  import { getUserName } from 'ayoba-microapp-api';
+  import { getUserAvatar } from 'ayoba-microapp-api';
+  import { closeApp } from 'ayoba-microapp-api';
   export default {
     name: 'chargerbk',
     components: {
@@ -241,15 +241,15 @@
       console.log('mounted before fetchData');
       this.fetchData();
       console.log('mounted after fetchData');
-      // console.log('login closeApp()');
-      // closeApp();
-      // console.log('login getUserName()');
-      // getUserName((username) => { this.ayoba_nickname = username; });
-      // console.log('login getUserAvatar()');
-      // getUserAvatar((avatar) => { this.ayoba_avatar = avatar; });
-      // console.log('login observeUserPresence()');
-      // observeUserPresence((online) => { this.ayoba_presence = online; this.ayoba_msisdn = getUserPhoneNumber(); this.ayoba_selfjid = getURLParameter('jid'); });
-      // console.log('started...');
+      console.log('login closeApp()');
+      closeApp();
+      console.log('login getUserName()');
+      getUserName((username) => { this.ayoba_nickname = username; });
+      console.log('login getUserAvatar()');
+      getUserAvatar((avatar) => { this.ayoba_avatar = avatar; });
+      console.log('login observeUserPresence()');
+      observeUserPresence((online) => { this.ayoba_presence = online; this.ayoba_msisdn = getUserPhoneNumber(); this.ayoba_selfjid = getURLParameter('jid'); });
+      console.log('started...');
     },
     computed: {
       reference() {
