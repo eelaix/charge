@@ -125,7 +125,6 @@
             </div>
           </div>
           <b-button block class="mainbtn mt-3" variant="outline-info" @click="showhours">{{'ChargeTIME'|trans}}: {{thehours[hourid]}}{{'hors'|trans}}</b-button>
-          <b-button block class="mainbtn mt-3" variant="info" @click="dologin">{{'btn_login'|trans}}</b-button>
           <b-button block class="mainbtn mt-3" variant="primary" @click="inputpays" v-if="mytoken && mybalnum<10">{{'btn_prepay'|trans}}</b-button>
           <b-button block class="mainbtn mt-3" variant="success" @click="dochargebk" v-if="mytoken && mybalnum>=10" :disabled="noclick">{{btntext}}</b-button>
           <div class="mypicker pickw" v-if="disphours">
@@ -241,15 +240,14 @@
       paystack
     },
     mounted() {
-      this.fetchData();
       getUserName((username) => { this.ayoba_nickname = username; });
       getUserAvatar((avatar) => { this.ayoba_avatar = avatar; });
-      observeUserPresence((online) => {
+      observeUserPresence(async (online) => {
         this.ayoba_presence = online;
         this.ayoba_msisdn = getUserPhoneNumber();
         this.ayoba_selfjid = getURLParameter('jid');
-        this.dologin();
       });
+      this.fetchData();
     },
     computed: {
       reference() {
@@ -306,26 +304,8 @@
       }
     },
     methods: {
-      async dologin(){
-        let qryparams = '&phone='+this.ayoba_msisdn+'&nick='+this.ayoba_nickname+'&jid='+this.ayoba_selfjid+'&online='+this.ayoba_presence;
-        let axresp = await this.axios.post('/ayobalogin?tm=' + new Date().getTime(), qryparams);
-        if (axresp && axresp.status == 200) {
-          if (axresp.data.rc==1) {
-            this.mytoken = axresp.data.token;
-            this.mybalnum = axresp.data.balnum;
-            this.mybalance = axresp.data.balance;
-            this.isagent = axresp.data.isagent;
-            localStorage.setItem('token', axresp.data.token);
-          } else {
-            localStorage.removeItem('token');
-            this.errormsg = axresp.data.rm;
-          }
-        } else {
-            this.errormsg = 'ERROR: network connection lose.';
-        }
-      },
       dologout(){
-        localStorage.removeItem('token');
+        this.mytoken = '';
         closeApp();
       },
       async momopay(){
@@ -342,52 +322,76 @@
       },
       async paycallback(response) {
         this.contentId = 0;
-        let lotoken = localStorage.getItem('token');
-        let qryparams = 'token=' + lotoken + '&ref=' + response.reference;
-        await this.axios.post('/paystackcb?tm=' + new Date().getTime(), qryparams);
-        this.loads = 1;
-        if (!this.keeploading) {
-          this.fetchData();
+        if ( this.mytoken ) {
+          let qryparams = 'token=' + this.mytoken + '&ref=' + response.reference;
+          let axresp = await this.axios.post('/paystackcb?tm=' + new Date().getTime(), qryparams);
+          if (axresp.status==200 && axresp.data.rc==1) {
+            this.mybalnum = axresp.data.balnum;
+            this.mybalance = axresp.data.balance;
+          }
+          this.loads = 1;
+          if (!this.keeploading) {
+            this.fetchData();
+          }
+          localStorage.setItem('preprepay', this.payamount);
+          localStorage.setItem('pemail', this.payemail);
+          localStorage.setItem('pfname', this.payfullname);
         }
-        localStorage.setItem('preprepay', this.payamount);
-        localStorage.setItem('pemail', this.payemail);
-        localStorage.setItem('pfname', this.payfullname);
-        await this.dologin();
       },
       payclose() {
         this.contentId = 0;
       },
       async fetchData() {
-        let lotoken = localStorage.getItem('token');
-        let qryparams = 'token=' + lotoken + '&loads=' + this.loads;
-        if (this.mac) {
-          qryparams = qryparams + '&mac=' + this.mac;
+        if ( this.mytoken ) {
+          let qryparams = 'token=' + this.mytoken + '&loads=' + this.loads;
+          if (this.mac) {
+            qryparams = qryparams + '&mac=' + this.mac;
+          } else {
+            qryparams = qryparams + '&id=' + this.chargerid;
+          }
+          this.loading = true;
+          let result = await this.axios.post('/getonebk?tm=' + new Date().getTime(), qryparams);
+          this.loading = false;
+          if (result && result.status >= 200) {
+            this.loads++;
+            if ( this.norefresh ==  false ){
+              Object.keys(result.data).forEach((key) => {
+                this[key] = result.data[key];
+              });
+              if (this.portid>-1) {
+                this.selectport(this.portid);
+              }
+            } else {
+              if (this.sw[this.portid]!=result.data.sw[this.portid]) {
+                this.norefresh = false;
+              }
+            }
+            if (this.loads < 100) {
+              this.keeploading = true;
+              setTimeout(this.fetchData, 1000);
+            } else {
+              this.keeploading = false;
+            }
+          }
         } else {
-          qryparams = qryparams + '&id=' + this.chargerid;
-        }
-        this.loading = true;
-        let result = await this.axios.post('/getonebk?tm=' + new Date().getTime(), qryparams);
-        this.loading = false;
-        if (result && result.status >= 200) {
-          this.loads++;
-          if ( this.norefresh ==  false ){
-            Object.keys(result.data).forEach((key) => {
-              this[key] = result.data[key];
-            });
-            if (this.portid>-1) {
-              this.selectport(this.portid);
-            }
-          } else {
-            if (this.sw[this.portid]!=result.data.sw[this.portid]) {
-              this.norefresh = false;
+          if ( this.ayoba_avatar && this.ayoba_nickname && this.ayoba_presence ) {
+            let qryparams = 'phone='+this.ayoba_msisdn+'&nick='+this.ayoba_nickname+'&jid='+this.ayoba_selfjid+'&online='+this.ayoba_presence;
+            let axresp = await this.axios.post('/ayobalogin?tm=' + new Date().getTime(), qryparams);
+            if (axresp && axresp.status == 200) {
+              if (axresp.data.rc==1) {
+                this.mytoken = axresp.data.token;
+                this.mybalnum = axresp.data.balnum;
+                this.mybalance = axresp.data.balance;
+                this.isagent = axresp.data.isagent;
+              } else {
+                this.mytoken = '';
+                this.errormsg = axresp.data.rm;
+              }
+            } else {
+              this.errormsg = 'ERROR: network connection lose.';
             }
           }
-          if (this.loads < 100) {
-            this.keeploading = true;
-            setTimeout(this.fetchData, 1000);
-          } else {
-            this.keeploading = false;
-          }
+          setTimeout(this.fetchData, 1000);
         }
       },
       selectport(id) {
@@ -476,7 +480,6 @@
       },
       async activevcard() {
         this.vcardbtnclicked = true;
-        let lotoken = localStorage.getItem('token');
         if ( Number(this.vcardnumber)+'' != this.vcardnumber ) {
           this.vcardbtn_text = this.$t('message.vcardactiveer1');
           setTimeout(() => { this.vcardbtnclicked = false; this.vcardbtn_text = this.$t('message.vcardactivenow'); }, 5000);
@@ -498,7 +501,7 @@
           setTimeout(() => { this.vcardbtnclicked = false; this.vcardbtn_text = this.$t('message.vcardactivenow'); }, 5000);
         }
         else {
-          let doparams = 'token=' + lotoken + '&cardid=' + this.vcardnumber;
+          let doparams = 'token=' + this.mytoken + '&cardid=' + this.vcardnumber;
           let ret;
           if ( this.isagent==1 ) {
             doparams = doparams + '&to=' + this.vcardtargetuser;
@@ -520,8 +523,7 @@
       async dochargebk() {
         this.noclick = true;
         this.norefresh = true;
-        let lotoken = localStorage.getItem('token');
-        let doparams = 'token=' + lotoken + '&mac=' + this.mac + '&portid=' + this.portid + '&hourid=' + this.hourid;
+        let doparams = 'token=' + this.mytoken + '&mac=' + this.mac + '&portid=' + this.portid + '&hourid=' + this.hourid;
         if ( this.sw[this.portid] == 0 ) {
           this.btntext = this.$t('message.Starting');
           await this.axios.post('/dochargebk?tm=' + new Date().getTime(), doparams);
