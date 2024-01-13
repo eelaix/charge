@@ -316,7 +316,7 @@
         });
         let obj = {
           method:'MoMo',
-          amount:this.payamount,
+          amount:Number(this.payamount)*100,
           currency:'GHS',
           description:'Eddievolt ChargeHub TopUp',
         };
