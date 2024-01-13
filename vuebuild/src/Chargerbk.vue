@@ -202,7 +202,7 @@
                     <p class="mt-2">{{'activecode'|trans}}</p>
                     <b-form-input size="lg" type="text" v-model="vcardnumber" required maxlength="8"></b-form-input>
                   </b-form-group>
-                  <b-button class="pay" variant="success" @click="activevcard" :disabled="vcardbtnclicked">
+                  <b-button class="cardpay" variant="info" @click="activevcard" :disabled="vcardbtnclicked">
                     {{vcardbtn_text}}
                   </b-button>
                   <div class="mt-4 mb-3">
@@ -309,6 +309,7 @@
         closeApp();
       },
       async momopay(){
+        this.momobtnclicked = true;
         observePayChange((change) => {
           console.log(JSON.stringify(change));
         });
@@ -318,7 +319,7 @@
           currency:'GHS',
           description:'Eddievolt ChargeHub TopUp',
         };
-        startPayment(obj);
+        startPayment(obj, (err) => {console.error(err);});
       },
       async paycallback(response) {
         this.contentId = 0;
@@ -366,7 +367,7 @@
                 this.norefresh = false;
               }
             }
-            if (this.loads < 100) {
+            if (this.loads < 2) {
               this.keeploading = true;
               setTimeout(this.fetchData, 1000);
             } else {
@@ -646,7 +647,6 @@
     padding-top: 20px;
     padding-bottom: 20px;
     font-size: 1.6rem;
-    color: darkblue;
   }
   .pay {
     width: 100%;
@@ -655,6 +655,13 @@
     padding-bottom: 20px;
     font-size: 1.6rem;
     color: green;
+  }
+  .cardpay {
+    width: 100%;
+    margin-top: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 1.6rem;
   }
   .hasnet {
     color: rgba(0, 255, 0, 0.6);
