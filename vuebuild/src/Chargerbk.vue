@@ -235,8 +235,9 @@
   };
   import paystack from 'vue-paystack';
   import { nanoid } from 'nanoid';
+  import { Client } from 'mobilemoney.js';
   import { paystackpublickey,prepaylimit,defaultpaystackid } from '@/config';
-  import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar,startPayment,observePayChange,closeApp } from 'ayoba-microapp-api';
+  import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar,closeApp } from 'ayoba-microapp-api';
   export default {
     name: 'chargerbk',
     components: {
@@ -312,25 +313,65 @@
         closeApp();
       },
       async momopay(){
-        this.momobtnclicked = true;
-        observePayChange((change) => {
-          console.error('observePayChange');
-          console.error(JSON.stringify(change));
-          this.errormsg = 'observePayChange:'+JSON.stringify(change);
-        }, (err) => {
-          console.error('observePayError');
-          console.error(JSON.stringify(err));
-          this.errormsg = 'observePayError:'+JSON.stringify(err);
-        });
-        let obj = {
-          method:'MoMo',
-          amount:parseInt(Number(this.payamount)*100, 10),
-          currency:'GHS',
-          description:'Eddievolt ChargeHub TopUp',
+        let user = new Client();
+        user.isSandbox();
+        let subscriptionKey = "232f2ffcb81b4b0ebe4e12c991f8ff96";
+        // creating uuid version 4 from the library
+        let uuid = user.getReferenceId();
+        console.log(`UUID : ${uuid}`);
+        // Creating user in sandbox env
+        let [done, ] = await user.createApiUser(uuid, subscriptionKey);
+        if (done){
+          console.log('Create successfully');
+          console.log(done);   
+        }
+        let [, apiUser] = await user.getApiUser(uuid, subscriptionKey);
+        console.log(`apiUser : `);
+        console.log(apiUser);
+        let [, data] = await user.createApiKey(uuid, subscriptionKey);
+        // Convert to basic token from apiuser & apikey, Library do it for you
+        let basicToken = user.basicToken(uuid, data.apiKey);
+        console.log(`Basic Token : ${basicToken}`);
+        // Getting collection product with credential
+        let collection = user.collection(subscriptionKey);
+        // Creating access token for collection product
+        let [,accessToken] = await collection.createAccessToken(basicToken);
+        accessToken = accessToken.access_token;
+        console.log(`AccessToken : ${accessToken}`);
+        // Convert to bearer token from access token
+        let bearerToken = user.bearerToken(accessToken);
+        console.log(`Bearer Token : ${bearerToken}`);
+        //request to pay
+        let body = {
+          "amount": (Number(this.payamount)*100).toFixed(0),
+          "currency": "GHS",
+          "payerMessage": "Eddievolt ChargeHub TopUp",
+          "payeeNote": "Service:"
         };
-        console.error(JSON.stringify(obj));
-        this.errormsg = JSON.stringify(obj);
-        startPayment(obj, (err) => {if(err){console.error(err);this.errormsg=JSON.stringify(err);}});
+        let [reqToPay,] = await collection.requestToPay(bearerToken, 
+          user.getReferenceId(), 
+          apiUser.targetEnvironment,
+          body);
+        console.log(`Request to Pay : ${reqToPay}`);
+        // this.momobtnclicked = true;
+        // observePayChange((change) => {
+        //   console.error('observePayChange');
+        //   console.error(JSON.stringify(change));
+        //   this.errormsg = 'observePayChange:'+JSON.stringify(change);
+        // }, (err) => {
+        //   console.error('observePayError');
+        //   console.error(JSON.stringify(err));
+        //   this.errormsg = 'observePayError:'+JSON.stringify(err);
+        // });
+        // let obj = {
+        //   method:'MoMo',
+        //   amount:parseInt(Number(this.payamount)*100, 10),
+        //   currency:'GHS',
+        //   description:'Eddievolt ChargeHub TopUp',
+        // };
+        // console.error(JSON.stringify(obj));
+        // this.errormsg = JSON.stringify(obj);
+        // startPayment(obj, (err) => {if(err){console.error(err);this.errormsg=JSON.stringify(err);}});
       },
       async paycallback(response) {
         this.contentId = 0;
