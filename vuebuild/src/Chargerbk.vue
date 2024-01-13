@@ -315,7 +315,7 @@
       async momopay(){
         let user = new Client();
         // user.isSandbox();
-        let callbackurl = 'https://eelaix.github.io/charge/';
+        let callbackurl = 'eelaix.github.io';
         let subscriptionKey = "232f2ffcb81b4b0ebe4e12c991f8ff96";
         // creating uuid version 4 from the library
         let uuid = user.getReferenceId();
