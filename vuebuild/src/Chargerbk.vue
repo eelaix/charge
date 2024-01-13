@@ -124,11 +124,6 @@
               </div>
             </div>
           </div>
-          <div>ayoba_presence:{{ayoba_presence}}</div>
-          <div>ayoba_nickname:{{ayoba_nickname}}</div>
-          <div>ayoba_avatar:{{ayoba_avatar}}</div>
-          <div>ayoba_msisdn:{{ayoba_msisdn}}</div>
-          <div>ayoba_selfjid:{{ayoba_selfjid}}</div>
           <b-button block class="mainbtn mt-3" variant="outline-info" @click="showhours">{{'ChargeTIME'|trans}}: {{thehours[hourid]}}{{'hors'|trans}}</b-button>
           <b-button block class="mainbtn mt-3" variant="info" @click="dologin">{{'btn_login'|trans}}</b-button>
           <b-button block class="mainbtn mt-3" variant="primary" @click="inputpays" v-if="mytoken && mybalnum<10">{{'btn_prepay'|trans}}</b-button>
@@ -178,8 +173,22 @@
                   </div>
                 </div>
               </b-tab>
-              <b-tab :title="$t('message.tabvcard')" @click="ff">
-              ffff
+              <b-tab :title="$t('message.tabmomo')">
+                <div class="weui-panel xnpanel mt-3 pt-4 pb-3">
+                  <div block class="text-right" style="margin-top:-10px">
+                  <b-icon block icon="x-circle" font-scale="1.5" variant="danger" @click="cancelpay"></b-icon>
+                  </div>
+                  <b-form-group>
+                    <p class="mt-2">{{'paymoneys'|trans}}</p>
+                    <b-form-input size="lg" type="text" v-model="payamount" required maxlength="4"></b-form-input>
+                  </b-form-group>
+                  <b-button class="mopay" variant="success" @click="momopay" :disabled="momobtnclicked">
+                    {{'lbmomopay'|trans}}
+                  </b-button>
+                  <div class="mt-4 mb-3">
+                    <img src="images/paystack-gh.png" class="w-100"/>
+                  </div>
+                </div>
               </b-tab>
               <b-tab :title="$t('message.tabvcard')">
                 <div class="weui-panel xnpanel mt-3 pt-4 pb-3">
@@ -224,10 +233,8 @@
   };
   import paystack from 'vue-paystack';
   import { nanoid } from 'nanoid';
-  import { paystackpublickey } from '@/config';
-  import { prepaylimit } from '@/config';
-  import { defaultpaystackid } from '@/config';
-  import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar,closeApp } from 'ayoba-microapp-api';
+  import { paystackpublickey,prepaylimit,defaultpaystackid } from '@/config';
+  import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar,startPayment,closeApp } from 'ayoba-microapp-api';
   export default {
     name: 'chargerbk',
     components: {
@@ -262,6 +269,7 @@
         noclick: true,
         norefresh: false,
         vcardbtnclicked:false,
+        momobtnclicked:false,
         step: 0,
         btntext: 'ChargeNOW',
         myid: -1,
@@ -299,6 +307,15 @@
       },
       dologout(){
         closeApp();
+      },
+      async momopay(){
+        let obj = {
+          method:'MoMo',
+          amount:this.payamount,
+          currency:'GHS',
+          description:'Eddievolt ChargeHub TopUp',
+        };
+        startPayment(obj);
       },
       async paycallback(response) {
         this.contentId = 0;
@@ -598,13 +615,21 @@
   .devbox1 {
     margin: 0 auto;
   }
+  .mopay {
+    width: 100%;
+    margin-top: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 1.6rem;
+    color: darkblue;
+  }
   .pay {
     width: 100%;
     margin-top: 20px;
     padding-top: 20px;
     padding-bottom: 20px;
     font-size: 1.6rem;
-    color: blue;
+    color: green;
   }
   .hasnet {
     color: rgba(0, 255, 0, 0.6);

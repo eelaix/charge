@@ -208,6 +208,8 @@ export const  message = {
   logs_desc: 'desc',
   'tabpaystack': 'paystack',
   'tabvcard': 'vCard',
+  'tabmomo': 'momo',
+  'lbmomopay': 'MoMo TopUp',
   'tabpaypal': 'byPayPal',
   'paypalmount': 'paymount',
   'm_admvcards':'virtualCards',
