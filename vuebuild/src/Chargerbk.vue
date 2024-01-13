@@ -4,6 +4,9 @@
     <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
     <b-container fluid="xs">
       <div class="boxw devbox1">
+        <div class="xn-errmsg" v-if="errormsg">
+          {{errormsg}}
+        </div>
         <div class="cheader li1" :class="loading?'hasnet':'nonet'">
           <div>
             <span>{{ayoba_nickname}}</span>&nbsp;<img :src="ayoba_avatar" class="avathead"/>
@@ -313,6 +316,7 @@
         observePayChange((change) => {
           console.error('observePayChange');
           console.log(JSON.stringify(change));
+          this.errormsg = JSON.stringify(change);
         });
         let obj = {
           method:'MoMo',
@@ -321,6 +325,7 @@
           description:'Eddievolt ChargeHub TopUp',
         };
         console.error(JSON.stringify(obj));
+        this.errormsg = JSON.stringify(obj);
         startPayment(obj, (err) => {console.error(err);});
       },
       async paycallback(response) {
@@ -391,7 +396,7 @@
                 this.errormsg = axresp.data.rm;
               }
             } else {
-              this.errormsg = 'ERROR: network connection lose.';
+              this.errormsg = 'amazonaws LoginERROR';
             }
           }
           setTimeout(this.fetchData, 1000);
@@ -546,6 +551,12 @@
   }
 </script>
 <style>
+  .xn-errmsg {
+    background: rgba(0, 0, 0, 0.9);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.6rem;
+    width: 100%;
+  }
   .avathead {
     width:36px;
     height:36px;
