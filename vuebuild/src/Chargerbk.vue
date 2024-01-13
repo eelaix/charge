@@ -315,8 +315,12 @@
         this.momobtnclicked = true;
         observePayChange((change) => {
           console.error('observePayChange');
-          console.log(JSON.stringify(change));
+          console.error(JSON.stringify(change));
           this.errormsg = 'observePayChange:'+JSON.stringify(change);
+        }, (err) => {
+          console.error('observePayError');
+          console.error(JSON.stringify(err));
+          this.errormsg = 'observePayError:'+JSON.stringify(err);
         });
         let obj = {
           method:'MoMo',
