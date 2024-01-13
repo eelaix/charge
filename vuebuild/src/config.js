@@ -9,6 +9,9 @@ export const paystackpublickey = 'pk_test_ffffffffffffffffffffffffffffffffffffff
 
 export const defaultpaystackid = 'info@eddivolt.one';
 
+export const momoPrimaryKey = '232f2ffcb81b4b0ebe4e12c991f8ff96';
+export const momoSecondaryKey = '6f942fa081f549df96d191bfbec4e95d';
+
 export const APPVERSION = '1.0.5';
 export const twodaymills = 172800000;
 export const prepaylimit = 100;

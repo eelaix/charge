@@ -314,8 +314,8 @@
       },
       async momopay(){
         let user = new Client();
-        user.isSandbox();
-        let subscriptionKey = "232f2ffcb81b4b0ebe4e12c991f8ff96";
+        // user.isSandbox();
+        let subscriptionKey = "6f942fa081f549df96d191bfbec4e95d";
         // creating uuid version 4 from the library
         let uuid = user.getReferenceId();
         console.log(`UUID : ${uuid}`);
