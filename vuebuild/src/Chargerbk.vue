@@ -326,7 +326,7 @@
         };
         console.error(JSON.stringify(obj));
         this.errormsg = JSON.stringify(obj);
-        startPayment(obj, (err) => {console.error(err);});
+        startPayment(obj, (err) => {if(err){console.error(err);this.errormsg=JSON.stringify(err);}});
       },
       async paycallback(response) {
         this.contentId = 0;
