@@ -6,13 +6,13 @@
       <div class="boxw devbox1">
         <div class="cheader li1" :class="loading?'hasnet':'nonet'">
           <div>
-            <span v-if="!mynickname">{{'ChargerID:'|trans}}</span>&nbsp;#{{chargerid}}
+            <span>{{ayoba_nickname}}</span>&nbsp;<img :src="ayoba_avatar" class="avathead"/>
           </div>
           <div v-if="contentId==0">
-            <span class="text-right" v-if="mytoken"><b-button class="btn btn-sm mybtn" variant="outline-success" @click="inputpays">{{'topup'|trans}}</b-button>&nbsp;{{mybalance}}&nbsp;</span>
+            <span class="text-right"><b-button class="btn btn-sm mybtn" variant="outline-success" @click="inputpays">{{'topup'|trans}}</b-button>&nbsp;{{mybalance}}&nbsp;</span>
           </div>
           <div v-else>
-            <span class="text-right" v-if="mytoken"><b-button class="btn btn-sm mybtn" variant="outline-warning" @click="dologout">{{'logout'|trans}}</b-button>&nbsp;</span>
+            <span class="text-right"><b-button class="btn btn-sm mybtn" variant="outline-warning" @click="dologout">{{'logout'|trans}}</b-button>&nbsp;</span>
           </div>
         </div>
         <template v-if="contentId==0">
@@ -227,23 +227,17 @@
   import { paystackpublickey } from '@/config';
   import { prepaylimit } from '@/config';
   import { defaultpaystackid } from '@/config';
-  import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar } from 'ayoba-microapp-api';
+  import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar,closeApp } from 'ayoba-microapp-api';
   export default {
     name: 'chargerbk',
     components: {
       paystack
     },
     mounted() {
-      console.log('mounted before fetchData');
       this.fetchData();
-      console.log('mounted after fetchData');
-      console.log('login getUserName()');
       getUserName((username) => { this.ayoba_nickname = username; });
-      console.log('login getUserAvatar()');
       getUserAvatar((avatar) => { this.ayoba_avatar = avatar; });
-      console.log('login observeUserPresence()');
       observeUserPresence((online) => { this.ayoba_presence = online; this.ayoba_msisdn = getUserPhoneNumber(); this.ayoba_selfjid = getURLParameter('jid'); });
-      console.log('started...');
     },
     computed: {
       reference() {
@@ -302,6 +296,9 @@
     methods: {
       dologin(){
         console.log('dologin');
+      },
+      dologout(){
+        closeApp();
       },
       async paycallback(response) {
         this.contentId = 0;
@@ -504,6 +501,10 @@
   }
 </script>
 <style>
+  .avathead {
+    width:36px;
+    height:36px;
+  }
   .weui-panel {
     position: relative;
     overflow: hidden;
