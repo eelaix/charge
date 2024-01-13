@@ -315,12 +315,13 @@
       async momopay(){
         let user = new Client();
         // user.isSandbox();
+        let callbackurl = 'https://eelaix.github.io/charge/';
         let subscriptionKey = "232f2ffcb81b4b0ebe4e12c991f8ff96";
         // creating uuid version 4 from the library
         let uuid = user.getReferenceId();
         console.log(`UUID : ${uuid}`);
         // Creating user in sandbox env
-        let [done, ] = await user.createApiUser(uuid, subscriptionKey);
+        let [done, ] = await user.createApiUser(uuid, subscriptionKey, callbackurl);
         if (done){
           console.log('Create successfully');
           console.log(done);   
