@@ -234,7 +234,7 @@
   import paystack from 'vue-paystack';
   import { nanoid } from 'nanoid';
   import { paystackpublickey,prepaylimit,defaultpaystackid } from '@/config';
-  import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar,startPayment,closeApp } from 'ayoba-microapp-api';
+  import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar,startPayment,observePayChange,closeApp } from 'ayoba-microapp-api';
   export default {
     name: 'chargerbk',
     components: {
@@ -244,7 +244,12 @@
       this.fetchData();
       getUserName((username) => { this.ayoba_nickname = username; });
       getUserAvatar((avatar) => { this.ayoba_avatar = avatar; });
-      observeUserPresence((online) => { this.ayoba_presence = online; this.ayoba_msisdn = getUserPhoneNumber(); this.ayoba_selfjid = getURLParameter('jid'); });
+      observeUserPresence((online) => {
+        this.ayoba_presence = online;
+        this.ayoba_msisdn = getUserPhoneNumber();
+        this.ayoba_selfjid = getURLParameter('jid');
+        this.dologin();
+      });
     },
     computed: {
       reference() {
@@ -278,7 +283,6 @@
         vcardnumber:'',
         vcardbtn_text: this.$t('message.vcardactivenow'),
         mytoken: '',
-        mynickname: '',
         mybalance: '0.00',
         mybalnum: 0,
         contentId: 0,
@@ -302,13 +306,32 @@
       }
     },
     methods: {
-      dologin(){
-        console.log('dologin');
+      async dologin(){
+        let qryparams = '&phone='+this.ayoba_msisdn+'&nick='+this.ayoba_nickname+'&jid='+this.ayoba_selfjid+'&online='+this.ayoba_presence;
+        let axresp = await this.axios.post('/ayobalogin?tm=' + new Date().getTime(), qryparams);
+        if (axresp && axresp.status == 200) {
+          if (axresp.data.rc==1) {
+            this.mytoken = axresp.data.token;
+            this.mybalnum = axresp.data.balnum;
+            this.mybalance = axresp.data.balance;
+            this.isagent = axresp.data.isagent;
+            localStorage.setItem('token', axresp.data.token);
+          } else {
+            localStorage.removeItem('token');
+            this.errormsg = axresp.data.rm;
+          }
+        } else {
+            this.errormsg = 'ERROR: network connection lose.';
+        }
       },
       dologout(){
+        localStorage.removeItem('token');
         closeApp();
       },
       async momopay(){
+        observePayChange((change) => {
+          console.log(JSON.stringify(change));
+        });
         let obj = {
           method:'MoMo',
           amount:this.payamount,
@@ -329,7 +352,7 @@
         localStorage.setItem('preprepay', this.payamount);
         localStorage.setItem('pemail', this.payemail);
         localStorage.setItem('pfname', this.payfullname);
-        this.authen();
+        await this.dologin();
       },
       payclose() {
         this.contentId = 0;
