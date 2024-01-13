@@ -10,5 +10,5 @@ module.exports = {
     index: 'src/chargerbk.js'
   },
   publicPath: '',
-  outputDir: 'dist'
+  outputDir: '../docs'
 }

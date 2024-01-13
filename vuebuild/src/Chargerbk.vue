@@ -311,6 +311,7 @@
       async momopay(){
         this.momobtnclicked = true;
         observePayChange((change) => {
+          console.error('observePayChange');
           console.log(JSON.stringify(change));
         });
         let obj = {
@@ -319,6 +320,7 @@
           currency:'GHS',
           description:'Eddievolt ChargeHub TopUp',
         };
+        console.error(JSON.stringify(obj));
         startPayment(obj, (err) => {console.error(err);});
       },
       async paycallback(response) {
