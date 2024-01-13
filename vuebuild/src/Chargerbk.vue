@@ -316,11 +316,11 @@
         observePayChange((change) => {
           console.error('observePayChange');
           console.log(JSON.stringify(change));
-          this.errormsg = JSON.stringify(change);
+          this.errormsg = 'observePayChange:'+JSON.stringify(change);
         });
         let obj = {
           method:'MoMo',
-          amount:Number(this.payamount)*100,
+          amount:parseInt(Number(this.payamount)*100, 10),
           currency:'GHS',
           description:'Eddievolt ChargeHub TopUp',
         };
@@ -552,9 +552,8 @@
 </script>
 <style>
   .xn-errmsg {
-    background: rgba(0, 0, 0, 0.9);
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.6rem;
+    background: rgba(0, 0, 0, 1);
+    color: rgba(255, 0, 0, 1);
     width: 100%;
   }
   .avathead {
