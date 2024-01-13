@@ -227,11 +227,7 @@
   import { paystackpublickey } from '@/config';
   import { prepaylimit } from '@/config';
   import { defaultpaystackid } from '@/config';
-  import { getUserPhoneNumber } from 'ayoba-microapp-api';
-  import { observeUserPresence } from 'ayoba-microapp-api';
-  import { getUserName } from 'ayoba-microapp-api';
-  import { getUserAvatar } from 'ayoba-microapp-api';
-  import { closeApp } from 'ayoba-microapp-api';
+  import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar } from 'ayoba-microapp-api';
   export default {
     name: 'chargerbk',
     components: {
@@ -241,8 +237,6 @@
       console.log('mounted before fetchData');
       this.fetchData();
       console.log('mounted after fetchData');
-      console.log('login closeApp()');
-      closeApp();
       console.log('login getUserName()');
       getUserName((username) => { this.ayoba_nickname = username; });
       console.log('login getUserAvatar()');
