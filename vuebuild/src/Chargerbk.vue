@@ -180,6 +180,10 @@
                   <div block class="text-right" style="margin-top:-10px">
                   <b-icon block icon="x-circle" font-scale="1.5" variant="danger" @click="cancelpay"></b-icon>
                   </div>
+                  <b-form-group style="margin-top:-20px;">
+                    <p>{{'mobilenumber'|trans}}</p>
+                    <b-form-input size="lg" type="text" v-model="mobilenumber" required maxlength="32"></b-form-input>
+                  </b-form-group>
                   <b-form-group>
                     <p class="mt-2">{{'paymoneys'|trans}}</p>
                     <b-form-input size="lg" type="text" v-model="payamount" required maxlength="4"></b-form-input>
@@ -249,6 +253,7 @@
         this.ayoba_presence = online;
         this.ayoba_msisdn = getUserPhoneNumber();
         this.ayoba_selfjid = getURLParameter('jid');
+        this.mobilenumber = this.ayoba_msisdn;
       });
       this.fetchData();
     },
@@ -295,6 +300,7 @@
         ayoba_nickname:'',
         ayoba_avatar:'',
         ayoba_msisdn:'',
+        mobilenumber:'',
         ayoba_selfjid:'',
         errormsg:'',
         prizz: ['-', '-', '-', '-', '-', '-'],
@@ -314,7 +320,7 @@
       },
       async momopay(){
         this.momobtnclicked = true;
-        let qryparams = 'token=' + this.mytoken + '&money=' + this.payamount;
+        let qryparams = 'token=' + this.mytoken + '&money=' + this.payamount + '&mobile=' + this.mobilenumber;
         let axresp = await this.axios.post('/momoprepay?tm=' + new Date().getTime(), qryparams);
         if (axresp.status!=200) {
           this.errormsg = 'momoPayfailed';

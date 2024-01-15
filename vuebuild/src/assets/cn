@@ -36,6 +36,7 @@ export const  message = {
   'paystackaccount':'paystack账号：',
   'paymoneys':'充值金额：',
   'hpayfullname':'你的真实全名',
+  'mobilenumber': '充值手机号',
   'topup': ' 充值 ',
   'logout': ' 退出 ',
   'ChargeTIME': '充电时长',

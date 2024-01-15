@@ -33,6 +33,7 @@ export const  message = {
   'Ready': 'Ready',
   'ChargerID:': 'ChargerID: ',
   'payfullname':'Full name: ',
+  'mobilenumber': 'MobilNumber',
   'paystackaccount':'Paystack ID: ',
   'paymoneys':'Charge moneys: ',
   'topup': ' Top Up ',
