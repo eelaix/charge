@@ -430,6 +430,7 @@
           }
         } else {
           if ( this.ayoba_avatar && this.ayoba_nickname && this.ayoba_presence ) {
+            if (this.loads==0) this.loads = 1;
             let qryparams = 'phone='+this.ayoba_msisdn+'&nick='+this.ayoba_nickname+'&jid='+this.ayoba_selfjid+'&online='+this.ayoba_presence;
             let axresp = await this.axios.post('/ayobalogin?tm=' + new Date().getTime(), qryparams);
             if (axresp && axresp.status == 200) {
@@ -738,11 +739,6 @@
     height: 100%;
     z-index: 1000;
   }
-  .mypicker {
-    position: absolute;
-    top: 0;
-    z-index: 11;
-  }
   .weui-media-box {
     border: 1px solid #777;
     padding-bottom: 60rpx;
@@ -865,10 +861,10 @@
     }
   }
   .opacity {background-color: rgba(255,255,255,0.8);}
-  .mypicker{background-color:rgba(153,153,153,0.9)}
+  .mypicker{position: absolute;top:0;z-index:1000;background-color:rgba(153,153,153,0.9)}
   @media (prefers-color-scheme: dark) {
     .opacity {background-color: rgba(0,0,0,0.8);}
-    .mypicker{background-color:rgba(102,102,102,0.9);}
+    .mypicker{position: absolute;top:0;z-index:1000;background-color:rgba(102,102,102,0.9);}
   }
   @media only screen and (orientation: landscape) {
     .boxw {
