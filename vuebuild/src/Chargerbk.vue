@@ -323,13 +323,19 @@
         let uuid = user.getReferenceId();
         console.log(`UUID : ${uuid}`);
         // Creating user in sandbox env
-        let [d1ret, d1err] = await user.createApiUser(uuid, subscriptionKey, callbackhost);
-        if (d1ret){
-          console.log('Create successfully');
-        } else {
-          console.log('Create error');
-          console.log(d1err);
-          this.errormsg = d1err;
+        let [d1ret, d1err] = undefined;
+        try{
+          [d1ret, d1err] = await user.createApiUser(uuid, subscriptionKey, callbackhost);
+          if (d1ret){
+            console.log('Create successfully');
+          } else {
+            console.log('Create error');
+            console.log(d1err);
+            this.errormsg = d1err;
+          }
+        }catch(e){
+          console.error(e);
+          this.errormsg = JSON.stringify(e);
         }
         let [d2ret, apiUser] = await user.getApiUser(uuid, subscriptionKey);
         if (d2ret){
