@@ -3,10 +3,10 @@
     <div v-if="loads==0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
     <b-container fluid="xs">
-      <div class="boxw devbox1">
-        <div class="xn-errmsg" v-if="errormsg">
+      <div class="xn-errmsg" v-if="errormsg">
           {{errormsg}}
-        </div>
+      </div>
+      <div class="boxw devbox1">
         <div class="cheader li1" :class="loading?'hasnet':'nonet'">
           <div>
             <span>{{ayoba_nickname}}</span>&nbsp;<img :src="ayoba_avatar" class="avathead"/>
@@ -322,8 +322,8 @@
         this.momobtnclicked = true;
         let qryparams = 'token=' + this.mytoken + '&money=' + this.payamount + '&mobile=' + this.mobilenumber;
         let axresp = await this.axios.post('/momoprepay?tm=' + new Date().getTime(), qryparams);
-        if (axresp.status!=200) {
-          this.errormsg = 'momoPayfailed';
+        if (axresp.data.rc<0) {
+          this.errormsg = 'momoPayfailed:'+axresp.data.rc;
           setTimeout(() => {
             this.momobtnclicked = false;
             this.errormsg = '';
@@ -557,6 +557,7 @@
   .xn-errmsg {
     background: rgba(0, 0, 0, 1);
     color: rgba(255, 0, 0, 1);
+    margin: 0 auto;
     width: 100%;
   }
   .avathead {
@@ -767,6 +768,7 @@
   }
   .mybtn {}
   @media only screen and (orientation: portrait) {
+    .boxw {width:100%;}
     .cheader {
       line-height: 10vw;
       font-size: 6vw;
