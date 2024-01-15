@@ -267,7 +267,7 @@
         payfullname: localStorage.pfname,
         payemail: defaultpaystackid,
         payamount: localStorage.preprepay?localStorage.preprepay:prepaylimit,
-        loads: 1,
+        loads: 0,
         disphours: false,
         keeploading: true,
         mac: undefined,
@@ -297,6 +297,7 @@
         ayoba_avatar:'',
         ayoba_msisdn:'',
         ayoba_selfjid:'',
+        errormsg:'',
         prizz: ['-', '-', '-', '-', '-', '-'],
         priz6: [0, 30, '8:00', '22:00'],
         thehours: ['10', '1', '2', '3', '4', '6', '8', '15'],
@@ -735,7 +736,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 10;
+    z-index: 1000;
   }
   .mypicker {
     position: absolute;
