@@ -317,26 +317,12 @@
         let qryparams = 'token=' + this.mytoken + '&money=' + this.payamount;
         let axresp = await this.axios.post('/momoprepay?tm=' + new Date().getTime(), qryparams);
         if (axresp.status!=200) {
-          this.momobtnclicked = false;
+          this.errormsg = 'momoPayfailed';
+          setTimeout(() => {
+            this.momobtnclicked = false;
+            this.errormsg = '';
+          }, 5000);
         }
-        // observePayChange((change) => {
-        //   console.error('observePayChange');
-        //   console.error(JSON.stringify(change));
-        //   this.errormsg = 'observePayChange:'+JSON.stringify(change);
-        // }, (err) => {
-        //   console.error('observePayError');
-        //   console.error(JSON.stringify(err));
-        //   this.errormsg = 'observePayError:'+JSON.stringify(err);
-        // });
-        // let obj = {
-        //   method:'MoMo',
-        //   amount:parseInt(Number(this.payamount)*100, 10),
-        //   currency:'GHS',
-        //   description:'Eddievolt ChargeHub TopUp',
-        // };
-        // console.error(JSON.stringify(obj));
-        // this.errormsg = JSON.stringify(obj);
-        // startPayment(obj, (err) => {if(err){console.error(err);this.errormsg=JSON.stringify(err);}});
       },
       async paystackcallback(response) {
         this.contentId = 0;
