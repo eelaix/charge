@@ -323,7 +323,7 @@
         let qryparams = 'token=' + this.mytoken + '&money=' + this.payamount + '&mobile=' + this.mobilenumber;
         let axresp = await this.axios.post('/momoprepay?tm=' + new Date().getTime(), qryparams);
         if (axresp.data.rc<0) {
-          this.errormsg = 'momoPayfailed:'+axresp.data.rc;
+          this.errormsg = axresp.data.rc+':'+axresp.data.rm;
           setTimeout(() => {
             this.momobtnclicked = false;
             this.errormsg = '';

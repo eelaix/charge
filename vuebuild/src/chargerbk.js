@@ -2,27 +2,17 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import Chargerbk from './Chargerbk.vue'
 import {
-  BootstrapVue,
-  IconsPlugin,
-  LayoutPlugin,
-  ModalPlugin,
   CardPlugin,
-  VBScrollspyPlugin,
-  DropdownPlugin,
-  TablePlugin
+  IconsPlugin,
+  BootstrapVue
 } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.config.productionTip = false;
-Vue.use(BootstrapVue);
-Vue.use(IconsPlugin);
-Vue.use(LayoutPlugin);
-Vue.use(ModalPlugin);
-Vue.use(CardPlugin);
-Vue.use(VBScrollspyPlugin);
-Vue.use(DropdownPlugin);
-Vue.use(TablePlugin);
 Vue.use(VueI18n);
+Vue.use(CardPlugin);
+Vue.use(IconsPlugin);
+Vue.use(BootstrapVue);
 import axios from 'axios'
 import { BASE } from '@/config'
 import VueAxios from 'vue-axios'
