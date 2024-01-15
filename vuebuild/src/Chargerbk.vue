@@ -167,7 +167,7 @@
                     <b-form-input size="lg" type="text" v-model="payamount" required maxlength="8"></b-form-input>
                   </b-form-group>
                   <paystack class="pay" :amount="payamount*100" :email="payemail" :paystackkey="paystackpubkey"
-                    :reference="reference" :callback="paycallback" :close="payclose" :embed="false" :channels="channels" currency="GHS">
+                    :reference="reference" :callback="paystackcallback" :close="paystackclose" :embed="false" :channels="channels" currency="GHS">
                     {{'btn_prepay'|trans}}
                   </paystack>
                   <div class="mt-4 mb-3">
@@ -315,14 +315,15 @@
       },
       async momopay(){
         let user = new Client();
-        // user.isSandbox();
-        let callbackurl = 'eelaix.github.io';
+        user.isSandbox();
+        let callbackhost = 'hbz68qhuab.execute-api.eu-west-3.amazonaws.com';
+        let callbackurl = 'https://hbz68qhuab.execute-api.eu-west-3.amazonaws.com/a/momocb';
         let subscriptionKey = "232f2ffcb81b4b0ebe4e12c991f8ff96";
         // creating uuid version 4 from the library
         let uuid = user.getReferenceId();
         console.log(`UUID : ${uuid}`);
         // Creating user in sandbox env
-        let [done, ] = await user.createApiUser(uuid, subscriptionKey, callbackurl);
+        let [done, ] = await user.createApiUser(uuid, subscriptionKey, callbackhost);
         if (done){
           console.log('Create successfully');
           console.log(done);   
@@ -353,7 +354,8 @@
         let [reqToPay,] = await collection.requestToPay(bearerToken, 
           user.getReferenceId(), 
           apiUser.targetEnvironment,
-          body);
+          body,
+          callbackurl);
         console.log(`Request to Pay : ${reqToPay}`);
         // this.momobtnclicked = true;
         // observePayChange((change) => {
@@ -375,7 +377,7 @@
         // this.errormsg = JSON.stringify(obj);
         // startPayment(obj, (err) => {if(err){console.error(err);this.errormsg=JSON.stringify(err);}});
       },
-      async paycallback(response) {
+      async paystackcallback(response) {
         this.contentId = 0;
         if ( this.mytoken ) {
           let qryparams = 'token=' + this.mytoken + '&ref=' + response.reference;
@@ -393,7 +395,7 @@
           localStorage.setItem('pfname', this.payfullname);
         }
       },
-      payclose() {
+      paystackclose() {
         this.contentId = 0;
       },
       async fetchData() {
