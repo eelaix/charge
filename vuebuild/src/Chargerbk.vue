@@ -318,20 +318,33 @@
         user.isSandbox();
         let callbackhost = 'hbz68qhuab.execute-api.eu-west-3.amazonaws.com';
         let callbackurl = 'https://hbz68qhuab.execute-api.eu-west-3.amazonaws.com/a/momocb';
-        let subscriptionKey = "232f2ffcb81b4b0ebe4e12c991f8ff96";
+        let subscriptionKey = "6f942fa081f549df96d191bfbec4e95d";
         // creating uuid version 4 from the library
         let uuid = user.getReferenceId();
         console.log(`UUID : ${uuid}`);
         // Creating user in sandbox env
-        let [done, ] = await user.createApiUser(uuid, subscriptionKey, callbackhost);
-        if (done){
+        let [d1ret, d1err] = await user.createApiUser(uuid, subscriptionKey, callbackhost);
+        if (d1ret){
           console.log('Create successfully');
-          console.log(done);   
+        } else {
+          console.log('Create error');
+          console.log(d1err);
+          this.errormsg = d1err;
         }
-        let [, apiUser] = await user.getApiUser(uuid, subscriptionKey);
-        console.log(`apiUser : `);
-        console.log(apiUser);
-        let [, data] = await user.createApiKey(uuid, subscriptionKey);
+        let [d2ret, apiUser] = await user.getApiUser(uuid, subscriptionKey);
+        if (d2ret){
+          console.log('apiUser :');
+          console.log(apiUser);
+        } else {
+          console.log('getApiUser error');
+        }
+        let [d3ret, data] = await user.createApiKey(uuid, subscriptionKey);
+        if (d3ret) {
+          console.log('createApiKey Success');
+          console.log(data);
+        } else {
+          console.log('createApiKey Error');
+        }
         // Convert to basic token from apiuser & apikey, Library do it for you
         let basicToken = user.basicToken(uuid, data.apiKey);
         console.log(`Basic Token : ${basicToken}`);
