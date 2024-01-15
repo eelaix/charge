@@ -323,7 +323,11 @@
         let uuid = user.getReferenceId();
         console.log(`UUID : ${uuid}`);
         // Creating user in sandbox env
-        let [d1ret, d1err] = undefined;
+        let d1ret, d1err;
+        let d2ret, apiUser;
+        let d3ret, theApiKey;
+        let d5ret, accessToken;
+        let d6ret, payResponse;
         try{
           [d1ret, d1err] = await user.createApiUser(uuid, subscriptionKey, callbackhost);
           if (d1ret){
@@ -337,45 +341,74 @@
           console.error(e);
           this.errormsg = JSON.stringify(e);
         }
-        let [d2ret, apiUser] = await user.getApiUser(uuid, subscriptionKey);
-        if (d2ret){
-          console.log('apiUser :');
-          console.log(apiUser);
-        } else {
-          console.log('getApiUser error');
+        try{
+          [d2ret, apiUser] = await user.getApiUser(uuid, subscriptionKey);
+          if (d2ret){
+            console.log('apiUser :');
+            console.log(apiUser);
+          } else {
+            console.log('getApiUser error');
+          }
+        }catch(e){
+          console.error(e);
+          this.errormsg = JSON.stringify(e);
         }
-        let [d3ret, data] = await user.createApiKey(uuid, subscriptionKey);
-        if (d3ret) {
-          console.log('createApiKey Success');
-          console.log(data);
-        } else {
-          console.log('createApiKey Error');
+        try{
+          [d3ret, theApiKey] = await user.createApiKey(uuid, subscriptionKey);
+          if (d3ret) {
+            console.log('createApiKey Success');
+            console.log(theApiKey);
+          } else {
+            console.log('createApiKey Error');
+          }
+        }catch(e){
+          console.error(e);
+          this.errormsg = JSON.stringify(e);
         }
         // Convert to basic token from apiuser & apikey, Library do it for you
-        let basicToken = user.basicToken(uuid, data.apiKey);
+        let basicToken = user.basicToken(uuid, theApiKey.apiKey);
         console.log(`Basic Token : ${basicToken}`);
         // Getting collection product with credential
         let collection = user.collection(subscriptionKey);
         // Creating access token for collection product
-        let [,accessToken] = await collection.createAccessToken(basicToken);
-        accessToken = accessToken.access_token;
-        console.log(`AccessToken : ${accessToken}`);
+        try{
+          [d5ret, accessToken] = await collection.createAccessToken(basicToken);
+          accessToken = accessToken.access_token;
+          if (d5ret) {
+            console.log(`AccessToken : ${accessToken}`);
+          } else {
+            console.error(`TokenError: ${basicToken}`);
+          }
+        }catch(e){
+          console.error(e);
+          this.errormsg = JSON.stringify(e);
+        }
         // Convert to bearer token from access token
         let bearerToken = user.bearerToken(accessToken);
         console.log(`Bearer Token : ${bearerToken}`);
         //request to pay
-        let body = {
-          "amount": (Number(this.payamount)*100).toFixed(0),
-          "currency": "GHS",
-          "payerMessage": "Eddievolt ChargeHub TopUp",
-          "payeeNote": "Service:"
-        };
-        let [reqToPay,] = await collection.requestToPay(bearerToken, 
-          user.getReferenceId(), 
-          apiUser.targetEnvironment,
-          body,
-          callbackurl);
-        console.log(`Request to Pay : ${reqToPay}`);
+        try{
+          let body = {
+            "amount": (Number(this.payamount)*100).toFixed(0),
+            "currency": "GHS",
+            "payerMessage": "Eddievolt ChargeHub TopUp",
+            "payeeNote": "Service:"
+          };
+          [d6ret, payResponse] = await collection.requestToPay(bearerToken,  user.getReferenceId(), apiUser.targetEnvironment, body, callbackurl);
+          if (d6ret) {
+            console.log(`Response : ${payResponse}`);
+          } else {
+            console.error('ResponseError');
+            console.error(user.getReferenceId());
+            console.error(bearerToken);
+            console.error(callbackurl);
+            console.error(JSON.stringify(apiUser.targetEnvironment));
+            console.error(JSON.stringify(body));
+          }
+        }catch(e){
+          console.error(e);
+          this.errormsg = JSON.stringify(e);
+        }
         // this.momobtnclicked = true;
         // observePayChange((change) => {
         //   console.error('observePayChange');
