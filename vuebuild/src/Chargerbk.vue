@@ -858,14 +858,15 @@
       display: none; 
   }
   .cheader {
-    margin-left: 1rem;
+    margin-top: 10px;
+    margin-left: 10px;
     line-height: 4rem;
     font-size: 1.6rem;
     margin-right: 1rem;
     vertical-align:middle;
   }
   .chead2 {
-    margin-left: 1rem;
+    margin-left: 10px;
     color:green;
     line-height: 4rem;
     font-size: 1.6rem;
@@ -874,7 +875,8 @@
   @media only screen and (orientation: portrait) {
     .boxw {width:100%;}
     .cheader {
-      margin-left: 1rem;
+      margin-top: 10px;
+      margin-left: 10px;
       line-height: 10vw;
       font-size: 6vw;
       margin-right: 2vw;
