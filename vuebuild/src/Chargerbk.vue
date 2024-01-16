@@ -1,5 +1,15 @@
 <template>
-<qrcode-stream v-if="contentId==2" @detect="onDetect" @error="onError"></qrcode-stream>
+<qrcode-stream v-if="contentId==2"
+  :paused="paused"
+  @detect="onDetect"
+  @camera-on="onCameraOn"
+  @camera-off="onCameraOff"
+  @error="onError"
+>
+<div v-show="showScanConfirmation" class="scan-confirmation">
+  <img src="checkmark.svg" alt="" width="128" />
+</div>
+</qrcode-stream>
 <div v-else>
     <div v-if="loads==0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
@@ -322,6 +332,8 @@
         mobilenumber:'',
         ayoba_selfjid:'',
         errormsg:'',
+        paused: false,
+        showScanConfirmation: false,
         prizz: ['-', '-', '-', '-', '-', '-'],
         priz6: [0, 30, '8:00', '22:00'],
         thehours: ['10', '1', '2', '3', '4', '6', '8', '15'],
@@ -333,8 +345,26 @@
       }
     },
     methods: {
-      onDetect(detectedCodes) {
-        this.errormsg = JSON.stringify(detectedCodes.map(code => code.rawValue));
+      async timeout(ms) {
+        return new Promise((resolve) => {
+          window.setTimeout(resolve, ms);
+        });
+      },
+      onCameraOn() {
+        this.showScanConfirmation = false;
+      },
+      onCameraOff() {
+        this.showScanConfirmation = true;
+      },
+      async onDetect(detectedCodes) {
+        let theid = JSON.stringify(detectedCodes.map((code) => code.rawValue));
+        let numid = Number(theid);
+        this.paused = true;
+        await this.timeout(500);
+        if ( theid.length==5 && (''+numid)==theid ) {
+          this.chargerid = numid;
+          this.contentId = 0;
+        }
       },
       onError(err){
         this.errormsg = err.message;
@@ -581,7 +611,16 @@
     }
   }
 </script>
-<style>
+<style scoped>
+  .scan-confirmation {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+  }
   .xn-errmsg {
     background: rgba(0, 0, 0, 1);
     color: rgba(255, 0, 0, 1);
