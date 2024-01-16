@@ -21,10 +21,10 @@
         </div>
         <div class="cheader li1" :class="loading?'hasnet':'nonet'" v-if="contentId==0">
           <div v-if="chargerid">
-            CHARGERid:&nbsp;<span>{{chargerid}}</span>
+            chargerID:&nbsp;<span>{{chargerid}}</span>
           </div>
           <div v-else>
-            chargerID:&lt;ScanQR First&gt;
+            &lt;ScanQR First&gt;
           </div>
           <span class="text-right">
             <b-button class="btn btn-sm mybtn" variant="outline-info" @click="qrscannow">
@@ -334,7 +334,7 @@
     },
     methods: {
       onDetect(detectedCodes) {
-        this.errormsg = detectedCodes;
+        this.errormsg = detectedCodes.toString();
         this.contentId = 0;
       },
       qrscannow(){
