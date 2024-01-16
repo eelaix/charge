@@ -1,6 +1,4 @@
 
-
-
 // aws apigateway get-rest-apis --query "items[?name=='a'].id" --output text
 export const BASE = 'https://hbz68qhuab.execute-api.eu-west-3.amazonaws.com/a';
 

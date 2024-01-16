@@ -302,7 +302,7 @@
         payfullname: localStorage.pfname,
         payemail: defaultpaystackid,
         payamount: localStorage.preprepay?localStorage.preprepay:prepaylimit,
-        loads: 1,
+        loads: 0,
         disphours: false,
         keeploading: true,
         mac: undefined,
