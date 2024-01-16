@@ -2,14 +2,14 @@
 <qrcode-stream v-if="contentId==2"
   :camera="camera"
   :torch="torch"
-  @detect="onDetect"
+  @decode="onDecode"
   @init="onInit"
 >
 <div v-show="paused" class="scan-confirmation">
   <img src="images/checkmark.svg" alt="" width="128" />
 </div>
 <div class="scan_tool_flash" @click="openFlash">
-  <img src="images/torchflash55.png" alt="" width="55" />
+  <img :src="torch?'images/torchflash551.png':'images/torchflash550.png'" alt="" width="55" />
 </div>
 </qrcode-stream>
 <div v-else>
@@ -353,7 +353,7 @@
           window.setTimeout(resolve, ms);
         });
       },
-      async onDetect(result) {
+      async onDecode(result) {
         let theid = result;
         let numid = Number(theid);
         this.paused = true;
@@ -375,6 +375,7 @@
         this.torch = !this.torch;
       },
       qrscannow(){
+        this.paused = false;
         this.contentId = 2;
         this.camera = 'rear';
       },
@@ -392,6 +393,18 @@
             this.momobtnclicked = false;
             this.errormsg = '';
           }, 5000);
+        } else {
+          setTimeout(this.momocheckbalance, 5000);
+        }
+      },
+      async momocheckbalance(){
+        let qryparams = 'token=' + this.mytoken + '&thisbalance=' + this.mybalnum;
+        let axresp = await this.axios.post('/momocheckbalance?tm=' + new Date().getTime(), qryparams);
+        if (axresp.data.rc==1) {
+          this.mybalnum = axresp.data.balnum;
+          this.mybalance = axresp.data.balance;
+        } else {
+          setTimeout(this.momocheckbalance, 1000);
         }
       },
       async paystackcallback(response) {
