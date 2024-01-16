@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-if="contentId==2">
     <div v-if="loads==0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
     <b-container fluid="xs">
@@ -7,16 +7,32 @@
           {{errormsg}}
       </div>
       <div class="boxw devbox1">
-        <div class="cheader li1" :class="loading?'hasnet':'nonet'">
+        <div class="cheader li1">
           <div>
-            <span>{{ayoba_nickname}}</span>&nbsp;<img :src="ayoba_avatar" class="avathead"/>
+            <img :src="ayoba_avatar" class="avathead"/>&nbsp;<span>{{ayoba_nickname}}</span>
           </div>
           <div v-if="contentId==0">
-            <span class="text-right"><b-button class="btn btn-sm mybtn" variant="outline-success" @click="inputpays">{{'topup'|trans}}</b-button>&nbsp;{{mybalance}}&nbsp;</span>
+            {{mybalance}}&nbsp;<span class="text-right"><b-button class="btn btn-sm mybtn" variant="outline-success" @click="inputpays">{{'topup'|trans}}</b-button></span>
           </div>
           <div v-else>
             <span class="text-right"><b-button class="btn btn-sm mybtn" variant="outline-warning" @click="dologout">{{'logout'|trans}}</b-button>&nbsp;</span>
           </div>
+        </div>
+        <div class="cheader li1" :class="loading?'hasnet':'nonet'" v-if="contentId==0">
+          <div v-if="chargerid">
+            CHARGERid:&nbsp;<span>{{chargerid}}</span>
+          </div>
+          <div v-else>
+            chargerID:&lt;ScanQR First&gt;
+          </div>
+          <span class="text-right">
+            <b-button class="btn btn-sm mybtn" variant="outline-info" @click="qrscannow">
+              <img src="images/scan54.png" class="wscan"/>
+            </b-button>
+          </span>
+        </div>
+        <div class="chead2" v-if="chargerid>0 && portid==-1">
+          TAP Free Socket (GREEN) First.
         </div>
         <template v-if="contentId==0">
           <div class="weui-panel">
@@ -222,6 +238,7 @@
       </div>
     </b-container>
 </div>
+<qrcode-stream v-else @detect="onDetect"></qrcode-stream>
 </template>
 <script>
   const getURLParameter = function(sParam) {
@@ -239,12 +256,14 @@
   };
   import paystack from 'vue-paystack';
   import { nanoid } from 'nanoid';
+  import { QrcodeStream } from 'vue-qrcode-reader';
   import { paystackpublickey,prepaylimit,defaultpaystackid } from '@/config';
   import { getUserPhoneNumber,observeUserPresence,getUserName,getUserAvatar,closeApp } from 'ayoba-microapp-api';
   export default {
     name: 'chargerbk',
     components: {
-      paystack
+      paystack,
+      QrcodeStream
     },
     mounted() {
       getUserName((username) => { this.ayoba_nickname = username; });
@@ -271,11 +290,11 @@
         payfullname: localStorage.pfname,
         payemail: defaultpaystackid,
         payamount: localStorage.preprepay?localStorage.preprepay:prepaylimit,
-        loads: 0,
+        loads: 1,
         disphours: false,
         keeploading: true,
         mac: undefined,
-        chargerid: 10000,
+        chargerid: 0,
         portid: -1,
         noclick: true,
         norefresh: false,
@@ -314,6 +333,12 @@
       }
     },
     methods: {
+      onDetect(detectedCodes) {
+        this.errormsg = detectedCodes;
+      },
+      qrscannow(){
+        this.contentId = 2;
+      },
       dologout(){
         this.mytoken = '';
         closeApp();
@@ -409,7 +434,7 @@
         let txt = '';
         let neverclick = true;
         if (this.sw[id] == 0) {
-          txt = this.$t('message.DoCharge')+'(#' + (id + 1) + ')';
+          txt = this.$t('message.DoCharge')+'(#' + (id + 1) + 'SOCKET)';
           neverclick = false;
         } else if (this.sw[id] == 1 || this.sw[id] == 2) {
           let nowtime = new Date().getTime();
@@ -687,6 +712,10 @@
     color: rgba(102, 102, 102, 0.5);
     text-shadow: 4px 4px 8px rgba(51, 51, 51, .2);
   }
+  .wscan {
+    width:54px;
+    height:54px;
+  }
   .mask {
     position: fixed;
     top: 0;
@@ -763,6 +792,7 @@
     margin-right: 1rem;
   }
   .chead2 {
+    color:green;
     line-height: 4rem;
     font-size: 1.6rem;
   }
@@ -779,6 +809,7 @@
       font-size: 4vw;
     }
     .chead2 {
+      color:green;
       line-height: 10vw;
       font-size: 5vw;
     }
