@@ -333,13 +333,10 @@
       }
     },
     methods: {
-      async onDetect(detectedCodes) {
+      onDetect(detectedCodes) {
         if ( detectedCodes.length>0 ) {
-          if (detectedCodes[0].rawValue.length==5 ) {
-            this.errormsg = detectedCodes[0].rawValue;
-            this.chargerid = Number(detectedCodes[0].rawValue);
-            this.contentId = 0;
-          }
+          this.errormsg = detectedCodes[0].toString();
+          this.contentId = 0;
         }
       },
       qrscannow(){
