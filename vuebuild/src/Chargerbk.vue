@@ -784,8 +784,8 @@
     text-shadow: 4px 4px 8px rgba(51, 51, 51, .2);
   }
   .wscan {
-    width:54px;
-    height:54px;
+    width:36px;
+    height:36px;
   }
   .mask {
     position: fixed;
@@ -861,6 +861,7 @@
     line-height: 4rem;
     font-size: 1.6rem;
     margin-right: 1rem;
+    vertical-align:middle;
   }
   .chead2 {
     color:green;
@@ -874,6 +875,7 @@
       line-height: 10vw;
       font-size: 6vw;
       margin-right: 2vw;
+      vertical-align:middle;
     }
     .mybtn {
       line-height: 5vw;
