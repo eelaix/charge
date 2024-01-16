@@ -1,5 +1,5 @@
 <template>
-<qrcode-stream v-if="contentId==2" @detect="onDetect"></qrcode-stream>
+<qrcode-stream v-if="contentId==2" @detect="onDetect" @error="onError"></qrcode-stream>
 <div v-else>
     <div v-if="loads==0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
@@ -334,10 +334,10 @@
     },
     methods: {
       onDetect(detectedCodes) {
-        if ( detectedCodes.length>0 ) {
-          this.errormsg = detectedCodes[0].toString();
-          this.contentId = 0;
-        }
+        this.errormsg = JSON.stringify(detectedCodes.map(code => code.rawValue));
+      },
+      onError(err){
+        this.errormsg = err.message;
       },
       qrscannow(){
         this.contentId = 2;
