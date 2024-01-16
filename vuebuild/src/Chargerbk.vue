@@ -466,7 +466,7 @@
         } else {
           if ( this.ayoba_avatar && this.ayoba_nickname && this.ayoba_presence ) {
             if (this.loads==0) this.loads = 1;
-            let qryparams = 'phone='+this.ayoba_msisdn+'&nick='+encodeURIComponent(this.ayoba_nickname)+'&jid='+encodeURIComponent(this.ayoba_selfjid)+'&online='+this.ayoba_presence;
+            let qryparams = 'phone='+encodeURIComponent(this.ayoba_msisdn)+'&nick='+encodeURIComponent(this.ayoba_nickname)+'&jid='+encodeURIComponent(this.ayoba_selfjid)+'&online='+this.ayoba_presence;
             let axresp = await this.axios.post('/ayobalogin?tm=' + new Date().getTime(), qryparams);
             if (axresp && axresp.status == 200) {
               if (axresp.data.rc==1) {
