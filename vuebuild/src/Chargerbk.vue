@@ -388,7 +388,7 @@
       },
       async momopay(){
         this.momobtnclicked = true;
-        let qryparams = 'token=' + this.mytoken + '&money=' + this.payamount + '&mobile=' + this.mobilenumber;
+        let qryparams = 'token=' + this.mytoken + '&money=' + this.payamount + '&mobile=' + encodeURIComponent(this.mobilenumber);
         let axresp = await this.axios.post('/momoprepay?tm=' + new Date().getTime(), qryparams);
         if (axresp.data.rc<0) {
           this.errormsg = axresp.data.rc+':'+axresp.data.rm;
@@ -466,7 +466,7 @@
         } else {
           if ( this.ayoba_avatar && this.ayoba_nickname && this.ayoba_presence ) {
             if (this.loads==0) this.loads = 1;
-            let qryparams = 'phone='+this.ayoba_msisdn+'&nick='+this.ayoba_nickname+'&jid='+this.ayoba_selfjid+'&online='+this.ayoba_presence;
+            let qryparams = 'phone='+this.ayoba_msisdn+'&nick='+encodeURIComponent(this.ayoba_nickname)+'&jid='+encodeURIComponent(this.ayoba_selfjid)+'&online='+this.ayoba_presence;
             let axresp = await this.axios.post('/ayobalogin?tm=' + new Date().getTime(), qryparams);
             if (axresp && axresp.status == 200) {
               if (axresp.data.rc==1) {
@@ -595,7 +595,7 @@
           let doparams = 'token=' + this.mytoken + '&cardid=' + this.vcardnumber;
           let ret;
           if ( this.isagent==1 ) {
-            doparams = doparams + '&to=' + this.vcardtargetuser;
+            doparams = doparams + '&to=' + encodeURIComponent(this.vcardtargetuser);
             ret = await this.axios.post('/vcardactive1?tm=' + new Date().getTime(), doparams);
           } else {
             ret = await this.axios.post('/vcardactive2?tm=' + new Date().getTime(), doparams);
