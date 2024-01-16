@@ -1,13 +1,15 @@
 <template>
 <qrcode-stream v-if="contentId==2"
-  :paused="paused"
+  :camera="camera"
+  :torch="torch"
   @detect="onDetect"
-  @camera-on="onCameraOn"
-  @camera-off="onCameraOff"
-  @error="onError"
+  @init="onInit"
 >
-<div v-show="showScanConfirmation" class="scan-confirmation">
-  <img src="checkmark.svg" alt="" width="128" />
+<div v-show="paused" class="scan-confirmation">
+  <img src="images/checkmark.svg" alt="" width="128" />
+</div>
+<div class="scan_tool_flash" @click="openFlash">
+  <img src="images/torchflash55.png" alt="" width="55" />
 </div>
 </qrcode-stream>
 <div v-else>
@@ -332,8 +334,9 @@
         mobilenumber:'',
         ayoba_selfjid:'',
         errormsg:'',
-        paused: false,
-        showScanConfirmation: false,
+        paused:false,
+        camera:'off',//"auto", "rear", "front", "off"
+        torch:false, //电筒
         prizz: ['-', '-', '-', '-', '-', '-'],
         priz6: [0, 30, '8:00', '22:00'],
         thehours: ['10', '1', '2', '3', '4', '6', '8', '15'],
@@ -350,27 +353,30 @@
           window.setTimeout(resolve, ms);
         });
       },
-      onCameraOn() {
-        this.showScanConfirmation = false;
-      },
-      onCameraOff() {
-        this.showScanConfirmation = true;
-      },
-      async onDetect(detectedCodes) {
-        let theid = JSON.stringify(detectedCodes.map((code) => code.rawValue));
+      async onDetect(result) {
+        let theid = result;
         let numid = Number(theid);
         this.paused = true;
         await this.timeout(500);
-        if ( theid.length==5 && (''+numid)==theid ) {
+        // if ( theid.length==5 && (''+numid)==theid ) {
           this.chargerid = numid;
+          this.camera = 'off';
           this.contentId = 0;
+        // }
+      },
+      async onInit(promise){
+        try{
+          await promise;
+        }catch(e){
+          this.errormsg = e.toString();
         }
       },
-      onError(err){
-        this.errormsg = err.message;
+      openFlash(){
+        this.torch = !this.torch;
       },
       qrscannow(){
         this.contentId = 2;
+        this.camera = 'rear';
       },
       dologout(){
         this.mytoken = '';
@@ -620,6 +626,13 @@
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
+  }
+  .scan_tool_flash {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display: flex;
+    flex-flow: row nowrap;
   }
   .xn-errmsg {
     background: rgba(0, 0, 0, 1);
