@@ -456,7 +456,7 @@
                 this.norefresh = false;
               }
             }
-            if (this.loads < 2) {
+            if (this.loads < 100) {
               this.keeploading = true;
               setTimeout(this.fetchData, 1000);
             } else {
