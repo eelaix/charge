@@ -1,5 +1,6 @@
 <template>
-<div v-if="contentId==2">
+<qrcode-stream v-if="contentId==2" @detect="onDetect"></qrcode-stream>
+<div v-else>
     <div v-if="loads==0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
     <b-container fluid="xs">
@@ -238,7 +239,6 @@
       </div>
     </b-container>
 </div>
-<qrcode-stream v-else @detect="onDetect"></qrcode-stream>
 </template>
 <script>
   const getURLParameter = function(sParam) {
@@ -335,6 +335,7 @@
     methods: {
       onDetect(detectedCodes) {
         this.errormsg = detectedCodes;
+        this.contentId = 0;
       },
       qrscannow(){
         this.contentId = 2;
