@@ -333,9 +333,14 @@
       }
     },
     methods: {
-      onDetect(detectedCodes) {
-        this.errormsg = detectedCodes.toString();
-        this.contentId = 0;
+      async onDetect(detectedCodes) {
+        if ( detectedCodes.length>0 ) {
+          if (detectedCodes[0].rawValue.length==5 ) {
+            this.errormsg = detectedCodes[0].rawValue;
+            this.chargerid = Number(detectedCodes[0].rawValue);
+            this.contentId = 0;
+          }
+        }
       },
       qrscannow(){
         this.contentId = 2;
