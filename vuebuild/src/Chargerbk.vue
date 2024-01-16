@@ -1,15 +1,15 @@
 <template>
 <qrcode-stream v-if="contentId==2"
   :camera="camera"
-  :torch="torch"
+  :torch="torchActive"
   @decode="onDecode"
   @init="onInit"
 >
 <div v-show="paused" class="scan-confirmation">
   <img src="images/checkmark.svg" alt="" width="128" />
 </div>
-<div class="scan_tool_flash" @click="openFlash">
-  <img :src="torch?'images/torchflash551.png':'images/torchflash550.png'" alt="" width="55" />
+<div v-show="TORCH_IS_SUPPORTED" class="scan_tool_flash" @click="openFlash">
+  <img :src="torchActive?'images/torchflash551.png':'images/torchflash550.png'" alt="" width="55" />
 </div>
 </qrcode-stream>
 <div v-else>
@@ -335,8 +335,9 @@
         ayoba_selfjid:'',
         errormsg:'',
         paused:false,
+        TORCH_IS_SUPPORTED:false,
         camera:'off',//"auto", "rear", "front", "off"
-        torch:false, //电筒
+        torchActive:false, //电筒
         prizz: ['-', '-', '-', '-', '-', '-'],
         priz6: [0, 30, '8:00', '22:00'],
         thehours: ['10', '1', '2', '3', '4', '6', '8', '15'],
@@ -356,23 +357,25 @@
       async onDecode(result) {
         let theid = result;
         let numid = Number(theid);
-        this.paused = true;
-        await this.timeout(500);
-        // if ( theid.length==5 && (''+numid)==theid ) {
+        if ( theid.length==5 && (''+numid)==theid ) {
+          this.paused = true;
+          await this.timeout(500);
           this.chargerid = numid;
           this.camera = 'off';
           this.contentId = 0;
-        // }
+        }
       },
       async onInit(promise){
         try{
-          await promise;
+          const { capabilities } = await promise;
+          this.TORCH_IS_SUPPORTED = !!capabilities.torch;
         }catch(e){
           this.errormsg = e.toString();
         }
       },
       openFlash(){
-        this.torch = !this.torch;
+        if ( this.torchActive ) this.torchActive = false;
+        else this.torchActive = true;
       },
       qrscannow(){
         this.paused = false;
