@@ -383,11 +383,11 @@
     openFlash() {
       this.torchActive = !this.torchActive;
     },
-      qrscannow(){
-        this.paused = false;
-        this.contentId = 2;
-        this.camera = 'rear';
-      },
+    qrscannow() {
+      this.paused = false;
+      this.contentId = 2;
+      this.camera = 'rear';
+    },
       dologout(){
         this.mytoken = '';
         closeApp();
