@@ -1,5 +1,4 @@
 <template>
-  <div>
     <qrcode-stream
       v-if="contentId === 2"
       :camera="camera"
@@ -14,7 +13,6 @@
         <img :src="torchActive ? 'images/torchflash551.png' : 'images/torchflash550.png'" alt="" width="55" />
       </div>
     </qrcode-stream>
-  </div>
 <div v-else>
     <div v-if="loads==0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
