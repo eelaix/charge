@@ -342,7 +342,7 @@
         priz6: [0, 30, '8:00', '22:00'],
         thehours: ['10', '1', '2', '3', '4', '6', '8', '15'],
         themins: ['10min', '15min', '20min', '30min', '45min', '1hr', '1.5hrs', '2hrs'],
-		st: ['Free', 'SwitchON', 'Charging', 'Disabled', 'StopDN', 'Offline', 'noDevice'],
+		st: ['Free', 'SwitchON', 'Charging', 'Disabled', 'StopDN', 'Offline', 'noID'],
         sw: [0, 1, 2, 3, 4, 5, 0, 0, 0, 0, 0, 0],
         se: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         pi: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
