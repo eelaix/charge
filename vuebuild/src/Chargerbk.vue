@@ -1,17 +1,20 @@
 <template>
-<qrcode-stream v-if="contentId==2"
-  :camera="camera"
-  :torch="torchActive"
-  @decode="onDecode"
-  @init="onInit"
->
-<div v-show="paused" class="scan-confirmation">
-  <img src="images/checkmark.svg" alt="" width="128" />
-</div>
-<div v-show="TORCH_IS_SUPPORTED" class="scan_tool_flash" @click="openFlash">
-  <img :src="torchActive?'images/torchflash551.png':'images/torchflash550.png'" alt="" width="55" />
-</div>
-</qrcode-stream>
+  <div>
+    <qrcode-stream
+      v-if="contentId === 2"
+      :camera="camera"
+      :torch="torchActive"
+      @decode="onDecode"
+      @init="onInit"
+    >
+      <div v-show="paused" class="scan-confirmation">
+        <img src="images/checkmark.svg" alt="" width="128" />
+      </div>
+      <div v-show="TORCH_IS_SUPPORTED" class="scan_tool_flash" @click="openFlash">
+        <img :src="torchActive ? 'images/torchflash551.png' : 'images/torchflash550.png'" alt="" width="55" />
+      </div>
+    </qrcode-stream>
+  </div>
 <div v-else>
     <div v-if="loads==0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
