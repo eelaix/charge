@@ -366,12 +366,13 @@
           this.contentId = 0;
         }
       },
-      async onInit(promise){
-        try{
+      async onInit(promise) {
+        try {
           const { capabilities } = await promise;
           this.TORCH_IS_SUPPORTED = !!capabilities.torch;
-        }catch(e){
-          this.errormsg = e.toString();
+        } catch (error) {
+          console.error('Error initializing camera:', error);
+          this.errormsg = 'Error initializing camera';
         }
       },
       openFlash(){
