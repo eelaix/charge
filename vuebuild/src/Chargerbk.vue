@@ -208,9 +208,6 @@
                   <b-icon block icon="x-circle" font-scale="1.5" variant="danger" @click="cancelpay"></b-icon>
                   </div>
                   <b-form-group style="margin-top:-20px;">
-                    <p>{{'payfullname'|trans}}</p>
-                    <b-form-input size="lg" type="text" v-model="payfullname" :placeholder="$t('message.hpayfullname')"
-                      required maxlength="32"></b-form-input>
                   </b-form-group>
                   <b-form-group>
                     <p class="mt-2">{{'paymoneys'|trans}}</p>
