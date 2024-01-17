@@ -388,10 +388,10 @@
       this.contentId = 2;
       this.camera = 'rear';
     },
-      dologout(){
-        this.mytoken = '';
-        closeApp();
-      },
+    dologout() {
+      this.mytoken = '';
+      closeApp();
+    },
       async momopay(){
         this.momobtnclicked = true;
         let qryparams = 'token=' + this.mytoken + '&money=' + this.payamount + '&mobile=' + encodeURIComponent(this.mobilenumber);
