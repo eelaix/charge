@@ -355,17 +355,22 @@
           window.setTimeout(resolve, ms);
         });
       },
-      async onDecode(result) {
-        let theid = result;
-        let numid = Number(theid);
-        if ( theid.length==5 && (''+numid)==theid ) {
+    async onDecode(result) {
+      try {
+        const numid = Number(result);
+
+        if (result.length === 5 && !isNaN(numid)) {
           this.paused = true;
           await this.timeout(500);
           this.chargerid = numid;
           this.camera = 'off';
           this.contentId = 0;
         }
-      },
+      } catch (error) {
+        console.error('Error decoding QR code:', error);
+        this.errormsg = 'Error decoding QR code';
+      }
+    },
       async onInit(promise) {
         try {
           const { capabilities } = await promise;
