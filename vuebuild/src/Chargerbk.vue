@@ -33,10 +33,10 @@
         </div>
         <div class="cheader li1" :class="loading?'hasnet':'nonet'" v-if="contentId==0">
           <div v-if="chargerid">
-            chargerID:&nbsp;<span>{{chargerid}}</span>
+            HubID:&nbsp;<span>{{chargerid}}</span>
           </div>
           <div v-else>
-            &lt;Scan QR Code&gt;
+            &lt;Scan Hub QR Code&gt;
           </div>
           <span class="text-right">
             <b-button class="btn btn-sm mybtn" variant="outline-info" @click="qrscannow">
