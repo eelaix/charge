@@ -1,0 +1,9 @@
+$blue: #0E5EA7;
+$primary: #9400bf;
+$spacer: 1.5rem;
+$navbar-dark-color: #a400dc;
+$info: #a400dc;
+
+// Include Bootstrap and BootstrapVue SCSS files
+@import '~bootstrap/scss/bootstrap.scss';
+@import '~bootstrap-vue/src/index.scss';
