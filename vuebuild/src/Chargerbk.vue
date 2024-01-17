@@ -322,7 +322,7 @@
         mytoken: '',
         mybalance: '0.00',
         mybalnum: 0,
-        contentId: 0,
+        contentId: 2,
         hourid: parseInt(localStorage.horid)||0,
         charging: 0,
         loading: false,
@@ -336,7 +336,7 @@
         errormsg:'',
         paused:false,
         TORCH_IS_SUPPORTED:false,
-        camera:'off',//"auto", "rear", "front", "off"
+        camera:'null',//"auto", "rear", "front", "off"
         torchActive:false, //电筒
         prizz: ['-', '-', '-', '-', '-', '-'],
         priz6: [0, 30, '8:00', '22:00'],
