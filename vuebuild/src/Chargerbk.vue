@@ -350,11 +350,11 @@
       }
     },
     methods: {
-      async timeout(ms) {
-        return new Promise((resolve) => {
-          window.setTimeout(resolve, ms);
-        });
-      },
+    async timeout(ms) {
+      return new Promise((resolve) => {
+        window.setTimeout(resolve, ms);
+      });
+    },
     async onDecode(result) {
       try {
         const numid = Number(result);
