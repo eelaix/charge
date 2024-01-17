@@ -197,7 +197,7 @@
                     <p class="mt-2">{{'paymoneys'|trans}}</p>
                     <b-form-input size="lg" type="text" v-model="payamount" required maxlength="4"></b-form-input>
                   </b-form-group>
-                  <b-button class="mopay" variant="success" @click="momopay" :disabled="momobtnclicked">
+                  <b-button class="mopay" variant="info" @click="momopay" :disabled="momobtnclicked">
                     {{'lbmomopay'|trans}}
                   </b-button>
                   <div class="mt-4 mb-3">
