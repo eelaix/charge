@@ -380,10 +380,9 @@
           this.errormsg = 'Error initializing camera';
         }
       },
-      openFlash(){
-        if ( this.torchActive ) this.torchActive = false;
-        else this.torchActive = true;
-      },
+    openFlash() {
+      this.torchActive = !this.torchActive;
+    },
       qrscannow(){
         this.paused = false;
         this.contentId = 2;
