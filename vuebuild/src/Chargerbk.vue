@@ -184,7 +184,7 @@
         </template>
         <template v-if="contentId==1">
           <b-tabs content-class="mb-4" end>
-              <b-tab :title="$t('message.tabmomo')">
+              <b-tab :title="$t('message.tabmomo')" active>
                 <div class="weui-panel xnpanel mt-3 pt-4 pb-3">
                   <div block class="text-right" style="margin-top:-10px">
                   <b-icon block icon="x-circle" font-scale="1.5" variant="danger" @click="cancelpay"></b-icon>
@@ -205,7 +205,7 @@
                   </div>
                 </div>
               </b-tab>			  
-              <b-tab :title="$t('message.tabpaystack')" active>
+              <b-tab :title="$t('message.tabpaystack')">
                 <div class="weui-panel xnpanel mt-3 pt-4 pb-3">
                   <div block class="text-right" style="margin-top:-10px">
                   <b-icon block icon="x-circle" font-scale="1.5" variant="danger" @click="cancelpay"></b-icon>
