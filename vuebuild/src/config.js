@@ -3,13 +3,13 @@
 export const BASE = 'https://hbz68qhuab.execute-api.eu-west-3.amazonaws.com/a';
 
 // @see https://paystack.com/docs/guides/accept_payments_on_your_vue_app
-export const paystackpublickey = 'pk_test_ffffffffffffffffffffffffffffffffffffffff';
+export const paystackpublickey = 'pk_live_bd718e3eafe0f5ff5b4eac83815cbca2b0f8f28c';
 
-export const defaultpaystackid = 'info@eddivolt.one';
+export const defaultpaystackid = 'payment@eddievolt.com';
 
 export const APPVERSION = '1.0.5';
 export const twodaymills = 172800000;
-export const prepaylimit = 100;
+export const prepaylimit = 1;
 export const ChargerSTATS = ['readyfree','readygunin','readywaiting','readycharging','readybadgnd','stopdown','offline'];
 
 if (typeof(Date.prototype.format) === "undefined") {
