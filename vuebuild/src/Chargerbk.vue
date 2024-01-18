@@ -1,18 +1,17 @@
 <template>
-    <qrcode-stream
-      v-if="contentId === 2"
-      :camera="camera"
-      :torch="torchActive"
-      @decode="onDecode"
-      @init="onInit"
-    >
-      <div v-show="paused" class="scan-confirmation">
-        <img src="images/checkmark.svg" alt="" width="128" />
-      </div>
-      <div v-show="TORCH_IS_SUPPORTED" class="scan_tool_flash" @click="openFlash">
-        <img :src="torchActive ? 'images/torchflash551.png' : 'images/torchflash550.png'" alt="" width="55" />
-      </div>
-    </qrcode-stream>
+<qrcode-stream v-if="contentId==2"
+  :camera="camera"
+  :torch="torchActive"
+  @decode="onDecode"
+  @init="onInit"
+>
+<div v-show="paused" class="scan-confirmation">
+  <img src="images/checkmark.svg" alt="" width="128" />
+</div>
+<div v-show="TORCH_IS_SUPPORTED" class="scan_tool_flash" @click="openFlash">
+  <img :src="torchActive?'images/torchflash551.png':'images/torchflash550.png'" alt="" width="55" />
+</div>
+</qrcode-stream>
 <div v-else>
     <div v-if="loads==0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
@@ -320,7 +319,7 @@
         mytoken: '',
         mybalance: '0.00',
         mybalnum: 0,
-        contentId: 2,
+        contentId: 0,
         hourid: parseInt(localStorage.horid)||0,
         charging: 0,
         loading: false,
@@ -334,7 +333,7 @@
         errormsg:'',
         paused:false,
         TORCH_IS_SUPPORTED:false,
-        camera:'null',//"auto", "rear", "front", "off"
+        camera:'off',//"auto", "rear", "front", "off"
         torchActive:false, //电筒
         prizz: ['-', '-', '-', '-', '-', '-'],
         priz6: [0, 30, '8:00', '22:00'],
@@ -348,48 +347,43 @@
       }
     },
     methods: {
-    async timeout(ms) {
-      return new Promise((resolve) => {
-        window.setTimeout(resolve, ms);
-      });
-    },
-    async onDecode(result) {
-      try {
-        const numid = Number(result);
-
-        if (result.length === 5 && !isNaN(numid)) {
+      async timeout(ms) {
+        return new Promise((resolve) => {
+          window.setTimeout(resolve, ms);
+        });
+      },
+      async onDecode(result) {
+        let theid = result;
+        let numid = Number(theid);
+        if ( theid.length==5 && (''+numid)==theid ) {
           this.paused = true;
           await this.timeout(500);
           this.chargerid = numid;
           this.camera = 'off';
           this.contentId = 0;
         }
-      } catch (error) {
-        console.error('Error decoding QR code:', error);
-        this.errormsg = 'Error decoding QR code';
-      }
-    },
-      async onInit(promise) {
-        try {
+      },
+      async onInit(promise){
+        try{
           const { capabilities } = await promise;
           this.TORCH_IS_SUPPORTED = !!capabilities.torch;
-        } catch (error) {
-          console.error('Error initializing camera:', error);
-          this.errormsg = 'Error initializing camera';
+        }catch(e){
+          this.errormsg = e.toString();
         }
       },
-    openFlash() {
-      this.torchActive = !this.torchActive;
-    },
-    qrscannow() {
-      this.paused = false;
-      this.contentId = 2;
-      this.camera = 'rear';
-    },
-    dologout() {
-      this.mytoken = '';
-      closeApp();
-    },
+      openFlash(){
+        if ( this.torchActive ) this.torchActive = false;
+        else this.torchActive = true;
+      },
+      qrscannow(){
+        this.paused = false;
+        this.contentId = 2;
+        this.camera = 'rear';
+      },
+      dologout(){
+        this.mytoken = '';
+        closeApp();
+      },
       async momopay(){
         this.momobtnclicked = true;
         let qryparams = 'token=' + this.mytoken + '&money=' + this.payamount + '&mobile=' + encodeURIComponent(this.mobilenumber);
