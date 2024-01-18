@@ -33,10 +33,10 @@
         </div>
         <div class="cheader li1" :class="loading?'hasnet':'nonet'" v-if="contentId==0">
           <div v-if="chargerid">
-            chargerID:&nbsp;<span>{{chargerid}}</span>
+            HubID:&nbsp;<span>{{chargerid}}</span>
           </div>
           <div v-else>
-            &lt;ScanQR First&gt;
+            &lt;Scan Hub QR Code&gt;
           </div>
           <span class="text-right">
             <b-button class="btn btn-sm mybtn" variant="outline-info" @click="qrscannow">
@@ -45,7 +45,7 @@
           </span>
         </div>
         <div class="chead2" v-if="chargerid>0 && portid==-1">
-          TAP Free Socket (GREEN) First.
+          TAP Free Socket.
         </div>
         <template v-if="contentId==0">
           <div class="weui-panel">
@@ -156,55 +156,32 @@
               </div>
             </div>
           </div>
-          <b-button block class="mainbtn mt-3" variant="outline-info" @click="showhours">{{'ChargeTIME'|trans}}: {{thehours[hourid]}}{{'hors'|trans}}</b-button>
-          <b-button block class="mainbtn mt-3" variant="primary" @click="inputpays" v-if="mytoken && mybalnum<10">{{'btn_prepay'|trans}}</b-button>
-          <b-button block class="mainbtn mt-3" variant="success" @click="dochargebk" v-if="mytoken && mybalnum>=10" :disabled="noclick">{{btntext}}</b-button>
+          <b-button block class="mainbtn mt-3" variant="outline-info" @click="showhours">{{'ChargeTIME'|trans}}: {{themins[hourid]}}</b-button>
+          <b-button block class="mainbtn mt-3" variant="primary" @click="inputpays" v-if="mytoken && mybalnum<0.1">{{'btn_prepay'|trans}}</b-button>
+          <b-button block class="mainbtn mt-3" variant="primary" @click="dochargebk" v-if="mytoken && mybalnum>=0.1" :disabled="noclick">{{btntext}}</b-button>
           <div class="mypicker pickw" v-if="disphours">
             <div class="weui-media-box">
               <div class="mypanel fs1">
                 {{$t('message.bkchargehours')}} : 
               </div>
               <div class="li2 fs2 mt-4">
-                <div class="pbo2" :class="hourid==0?'f0':'f1'" id="0" @click="selectfee">10{{'hors'|trans}}</div>
-                <div class="pbo2" :class="hourid==1?'f0':'f1'" id="1" @click="selectfee">1 {{'hors'|trans}}</div>
-                <div class="pbo2" :class="hourid==2?'f0':'f1'" id="2" @click="selectfee">2 {{'hors'|trans}}</div>
-                <div class="pbo2" :class="hourid==3?'f0':'f1'" id="3" @click="selectfee">3 {{'hors'|trans}}</div>
-              </div>
-              <div class="li2 fs2 mt-4 mb-4">
-                <div class="pbo2" :class="hourid==4?'f0':'f1'" id="4" @click="selectfee">4 {{'hors'|trans}}</div>
-                <div class="pbo2" :class="hourid==5?'f0':'f1'" id="5" @click="selectfee">6 {{'hors'|trans}}</div>
-                <div class="pbo2" :class="hourid==6?'f0':'f1'" id="6" @click="selectfee">8 {{'hors'|trans}}</div>
-                <div class="pbo2" :class="hourid==7?'f0':'f1'" id="7" @click="selectfee">15{{'hors'|trans}}</div>
+                <div class="pbo2" :class="hourid==0?'f0':'f1'" id="0" @click="selectfee">10{{'mins'|trans}}</div>
+                <div class="pbo2" :class="hourid==1?'f0':'f1'" id="1" @click="selectfee">15{{'mins'|trans}}</div>
+                <div class="pbo2" :class="hourid==2?'f0':'f1'" id="2" @click="selectfee">20{{'mins'|trans}}</div>
+                <div class="pbo2" :class="hourid==3?'f0':'f1'" id="3" @click="selectfee">30{{'mins'|trans}}</div>
+              </div></div>
+              <div class="li2 fs2 mt-4 mb-4"><div class="li2 fs2 mt-4 mb-4">
+                <div class="pbo2" :class="hourid==4?'f0':'f1'" id="4" @click="selectfee">45{{'mins'|trans}}</div>
+                <div class="pbo2" :class="hourid==5?'f0':'f1'" id="5" @click="selectfee">1{{'hor'|trans}}</div>
+                <div class="pbo2" :class="hourid==6?'f0':'f1'" id="6" @click="selectfee">1.5{{'hors'|trans}}</div>
+                <div class="pbo2" :class="hourid==7?'f0':'f1'" id="7" @click="selectfee">2{{'hors'|trans}}</div>
               </div>
             </div>
           </div>
         </template>
         <template v-if="contentId==1">
           <b-tabs content-class="mb-4" end>
-              <b-tab :title="$t('message.tabpaystack')" active>
-                <div class="weui-panel xnpanel mt-3 pt-4 pb-3">
-                  <div block class="text-right" style="margin-top:-10px">
-                  <b-icon block icon="x-circle" font-scale="1.5" variant="danger" @click="cancelpay"></b-icon>
-                  </div>
-                  <b-form-group style="margin-top:-20px;">
-                    <p>{{'payfullname'|trans}}</p>
-                    <b-form-input size="lg" type="text" v-model="payfullname" :placeholder="$t('message.hpayfullname')"
-                      required maxlength="32"></b-form-input>
-                  </b-form-group>
-                  <b-form-group>
-                    <p class="mt-2">{{'paymoneys'|trans}}</p>
-                    <b-form-input size="lg" type="text" v-model="payamount" required maxlength="8"></b-form-input>
-                  </b-form-group>
-                  <paystack class="pay" :amount="payamount*100" :email="payemail" :paystackkey="paystackpubkey"
-                    :reference="reference" :callback="paystackcallback" :close="paystackclose" :embed="false" :channels="channels" currency="GHS">
-                    {{'btn_prepay'|trans}}
-                  </paystack>
-                  <div class="mt-4 mb-3">
-                    <img src="images/paystack-gh.png" class="w-100"/>
-                  </div>
-                </div>
-              </b-tab>
-              <b-tab :title="$t('message.tabmomo')">
+              <b-tab :title="$t('message.tabmomo')" active>
                 <div class="weui-panel xnpanel mt-3 pt-4 pb-3">
                   <div block class="text-right" style="margin-top:-10px">
                   <b-icon block icon="x-circle" font-scale="1.5" variant="danger" @click="cancelpay"></b-icon>
@@ -217,9 +194,29 @@
                     <p class="mt-2">{{'paymoneys'|trans}}</p>
                     <b-form-input size="lg" type="text" v-model="payamount" required maxlength="4"></b-form-input>
                   </b-form-group>
-                  <b-button class="mopay" variant="success" @click="momopay" :disabled="momobtnclicked">
+                  <b-button class="mopay" variant="info" @click="momopay" :disabled="momobtnclicked">
                     {{'lbmomopay'|trans}}
                   </b-button>
+                  <div class="mt-4 mb-3">
+                    <img src="images/mtn-momo.png" class="w-100"/>
+                  </div>
+                </div>
+              </b-tab>			  
+              <b-tab :title="$t('message.tabpaystack')">
+                <div class="weui-panel xnpanel mt-3 pt-4 pb-3">
+                  <div block class="text-right" style="margin-top:-10px">
+                  <b-icon block icon="x-circle" font-scale="1.5" variant="danger" @click="cancelpay"></b-icon>
+                  </div>
+                  <b-form-group style="margin-top:-20px;">
+                  </b-form-group>
+                  <b-form-group>
+                    <p class="mt-2">{{'paymoneys'|trans}}</p>
+                    <b-form-input size="lg" type="text" v-model="payamount" required maxlength="8"></b-form-input>
+                  </b-form-group>
+                  <paystack class="pay" :amount="payamount*100" :email="payemail" :paystackkey="paystackpubkey"
+                    :reference="reference" :callback="paystackcallback" :close="paystackclose" :embed="false" :channels="channels" currency="GHS">
+                    {{'btn_prepay'|trans}}
+                  </paystack>
                   <div class="mt-4 mb-3">
                     <img src="images/paystack-gh.png" class="w-100"/>
                   </div>
@@ -242,7 +239,7 @@
                     {{vcardbtn_text}}
                   </b-button>
                   <div class="mt-4 mb-3">
-                    <img src="images/paystack-gh.png" class="w-100"/>
+                    <img src="images/voucher-card.png" class="w-100"/>
                   </div>
                 </div>
               </b-tab>
@@ -313,7 +310,7 @@
         vcardbtnclicked:false,
         momobtnclicked:false,
         step: 0,
-        btntext: 'ChargeNOW',
+        btntext: 'Start Charge',
         myid: -1,
         isagent:0,
         vcardtargetuser:'',
@@ -341,7 +338,8 @@
         prizz: ['-', '-', '-', '-', '-', '-'],
         priz6: [0, 30, '8:00', '22:00'],
         thehours: ['10', '1', '2', '3', '4', '6', '8', '15'],
-        st: ['Free', 'SwitchON', 'Charging', 'Disabled', 'StopDN', 'Offline', 'noID'],
+        themins: ['10min', '15min', '20min', '30min', '45min', '1hr', '1.5hrs', '2hrs'],
+		st: ['Free', 'SwitchON', 'Charging', 'Disabled', 'StopDN', 'Offline', 'noID'],
         sw: [0, 1, 2, 3, 4, 5, 0, 0, 0, 0, 0, 0],
         se: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         pi: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -688,7 +686,7 @@
     justify-content: space-between;
   }
   .p1 {
-    background-color: #9f9;
+    background-color: #9d00c7;
   }
   .p0 {
     background-color: unset;
@@ -709,7 +707,7 @@
     position: relative;
   }
   .bg0 {
-    background: rgba(0, 255, 0, 0.9);
+    background: #9d00c7;
   }
   .bg1 {
     background: rgba(255, 255, 0, 0.3);
@@ -766,7 +764,7 @@
     padding-top: 20px;
     padding-bottom: 20px;
     font-size: 1.6rem;
-    color: green;
+    color: #9d00c7;
   }
   .cardpay {
     width: 100%;
@@ -776,7 +774,7 @@
     font-size: 1.6rem;
   }
   .hasnet {
-    color: rgba(0, 255, 0, 0.6);
+    color: #9d00c7;
     text-shadow: 4px 4px 8px rgba(51, 51, 51, .2);
   }
   .nonet {
@@ -795,12 +793,18 @@
     height: 100%;
     z-index: 1000;
   }
+  .mypicker {
+    position: absolute;
+    top: 0;
+    z-index: 11;
+    background-color: rgba(255, 255, 255, 0.9); /* Add background color with transparency */
+  }
   .weui-media-box {
-    border: 1px solid #777;
+    border: 1px solid #9d00c7;
     padding-bottom: 60rpx;
   }
   .mypanel {
-    border-bottom: 1px solid red;
+    border-bottom: 1px solid #9d00c7;
     line-height: 2.1em;
   }
   .pbo2 {
@@ -810,7 +814,7 @@
     text-align: center;
   }
   .f0 {
-    background: rgba(0, 204, 0, 0.4);
+    background: #9d00c7;
   }
   .f1 {
     background: rgba(0, 0, 0, 0.1);
@@ -824,6 +828,12 @@
   .li2 {
     display: flex;
     justify-content: space-between;
+  }
+  .li2 > .pbo2 {
+    flex: 1;
+    padding: 15px; /* Add space around each cell */
+    border-radius: 10px; /* Rounded corners for shadow effect */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Stylish shadow effect */
   }
   .lnk{color:rgba(0,102,0,0.5);}
   .offlin {background-color:#D3D3D3;filter:Alpha(Opacity=60);opacity:0.6;color:#666}

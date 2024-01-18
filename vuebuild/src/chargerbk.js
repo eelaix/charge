@@ -7,6 +7,7 @@ import Chargerbk from './Chargerbk.vue';
 import {CardPlugin,IconsPlugin,BootstrapVue} from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import './styles/_custom.scss'
 Vue.use(VueI18n);
 Vue.use(CardPlugin);
 Vue.use(IconsPlugin);
