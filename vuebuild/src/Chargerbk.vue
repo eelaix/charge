@@ -306,7 +306,7 @@
         disphours: false,
         keeploading: true,
         mac: undefined,
-        chargerid: 0,
+        chargerid: 10000,
         portid: -1,
         noclick: true,
         norefresh: false,
