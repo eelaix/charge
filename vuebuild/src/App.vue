@@ -917,8 +917,11 @@ function handleOnCanStop() {
     font-size: 1.6rem;
   }
   .mybtn {}
+  .pbox {
+    padding: 18px;
+    border-bottom: 1px solid #ddd;
+  }
   @media only screen and (orientation: portrait) {
-    .boxw {width:100%;}
     .cheader {
       margin-top: 10px;
       margin-left: 10px;
@@ -935,10 +938,6 @@ function handleOnCanStop() {
       color:green;
       line-height: 10vw;
       font-size: 5vw;
-    }
-    .pbox {
-      padding: 5vw;
-      border-bottom: 1px solid #ddd;
     }
     .w-ama {
       width: 19vw;
@@ -978,13 +977,6 @@ function handleOnCanStop() {
     .mypicker{position: absolute;top:0;z-index:1000;background-color:rgba(102,102,102,0.9);}
   }
   @media only screen and (orientation: landscape) {
-    .boxw {
-      width: 500px;
-    }
-    .pbox {
-      padding: 18px;
-      border-bottom: 1px solid #ddd;
-    }
     .w-ama {
       width: 80px;
       height: 80px;
