@@ -452,6 +452,9 @@ function onResult(data: any): void {
     }
   }
 }
+function onLoaded() {
+  snotify.error('onloaded')
+}
 function onLoading(loading: boolean) {
   snotify.success('onloading:' + loading)
   cam_isLoading.value = loading
@@ -965,6 +968,7 @@ function handleOnCanStop() {
             ref="refCamera"
             capture="shoot"
             show-on-stream
+            @loaded="onLoaded"
             @onloading="onLoading"
             @result="onResult"
           />
