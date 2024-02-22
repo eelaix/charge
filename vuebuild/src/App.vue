@@ -475,13 +475,15 @@ function handleOnCanStop() {
 }
 </script>
 <template>
+
   <div class="container-md">
+
     <vue3-notify />
     <div v-if="loads == 0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
 
     <div v-if="contentId == 0">
-      
+
       <ul class="nav nav-pills nav-fill h3 mt-1">
         <li class="nav-item text-start my-auto">
           <img
@@ -505,7 +507,7 @@ function handleOnCanStop() {
           <span v-else>&lt;ScanQR First&gt;</span>
         </li>
         <li class="nav-item text-end btn btn-sm  my-auto" @click="qrscannow">
-          <img :src="getAssetsFile('scan54.png')" class="wscan" />
+          <img :src="getAssetsFile('scan54.png')" class="avathead" />
         </li>
       </ul>
       <div class="text-center mt-1">
@@ -676,18 +678,18 @@ function handleOnCanStop() {
           </div>
         </div>
       </div>
-      <button class="mt-3 btn btn-outline-info w-100" @click="showhours">
+      <button class="btn btn-outline-info w-100 mt-3" @click="showhours">
         {{ $t('ChargeTIME') }}: {{ thehours[hourid] }}{{ $t('hors') }}
       </button>
       <button
-        class="mt-3 btn-primary w-100"
+        class="btn btn-warning w-100 mt-3"
         @click="inputpays"
         v-if="ayoba.mytoken && ayoba.mybalnum < 10"
       >
         {{ $t('btn_prepay') }}
       </button>
       <button
-        class="mt-3 btn-success w-100"
+        class="btn btn-success w-100 mt-3"
         @click="dochargebk"
         v-if="ayoba.mytoken && ayoba.mybalnum >= 10"
         :disabled="noclick"
@@ -941,6 +943,7 @@ function handleOnCanStop() {
     </div>
 
     <div v-if="contentId == 2">
+
       <div class="flex justify-center items-center mt-10">
         <template v-if="isLoading">
           <button class="bg-yellow-300 px-6 py-1 rounded-md me-4" @click="handleFacemode">
@@ -976,7 +979,9 @@ function handleOnCanStop() {
         </div>
       </div>
     </div>
+
   </div>
+
 </template>
 
 <style scoped>
@@ -1090,10 +1095,6 @@ function handleOnCanStop() {
   color: rgba(102, 102, 102, 0.5);
   text-shadow: 4px 4px 8px rgba(51, 51, 51, 0.2);
 }
-.wscan {
-  width: 36px;
-  height: 36px;
-}
 .mask {
   position: fixed;
   top: 0;
@@ -1107,7 +1108,7 @@ function handleOnCanStop() {
   line-height: 2.1em;
 }
 .pbo2 {
-  padding: 1rem;
+  padding: 0.5rem;
   border-radius: 40%;
   border: 2rpx dotted #aaa;
   text-align: center;
