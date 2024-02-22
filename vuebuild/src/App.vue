@@ -481,37 +481,35 @@ function handleOnCanStop() {
     <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
 
     <div v-if="contentId == 0">
-      <div class="d-flex h3 mt-1">
-        <div class="col my-auto">
-          {{ ayoba.nickname ? ayoba.nickname : '(Ayoba UserName)' }}
-        </div>
-        <div class="col my-auto">
-          {{ ayoba.mybalance }}
-        </div>
-        <div class="col">
-          <button type="button" class="btn btn-sm btn-outline-success" @click="inputpays">
-            {{ $t('topup') }}
-          </button>
-        </div>
-      </div>
-      <div class="d-flex h3 mt-1" :class="loading ? 'text-danger' : 'text-secondary'">
-        <div class="col my-auto">
-          <span v-if="charger.chargerid"
-            >chargerID:&nbsp;<span>{{ charger.chargerid }}</span></span
-          >
-          <span v-else>&lt;ScanQR First&gt;</span>
-        </div>
-        <div class="col">&nbsp;</div>
-        <div class="col">
+      
+      <ul class="nav nav-pills nav-fill h3 mt-1">
+        <li class="nav-item">
           <img
             :src="ayoba.avatar ? ayoba.avatar : getAssetsFile('logo.png')"
             class="avathead img-thumbnail"
           />
+          {{ ayoba.nickname ? ayoba.nickname : '(Ayoba UserName)' }}
+        </li>
+        <li class="nav-item ml-auto">
+          {{ ayoba.mybalance }}
+          <button type="button" class="btn btn-sm btn-outline-success" @click="inputpays">
+            {{ $t('topup') }}
+          </button>
+        </li>
+      </ul>
+      <ul class="nav nav-pills nav-fill h3 mt-1">
+        <li class="nav-item">
+          <span v-if="charger.chargerid"
+            >chargerID:&nbsp;<span>{{ charger.chargerid }}</span></span
+          >
+          <span v-else>&lt;ScanQR First&gt;</span>
+        </li>
+        <li class="nav-item ml-auto">
           <button class="btn" @click="qrscannow">
             <img :src="getAssetsFile('scan54.png')" class="wscan img-thumbnail" />
           </button>
-        </div>
-      </div>
+        </li>
+      </ul>
       <div class="text-center mt-1">
         <div class="d-inline-flex">
           <div class="bdright">
@@ -734,19 +732,18 @@ function handleOnCanStop() {
     </div>
 
     <div v-if="contentId == 1">
-      <div class="d-flex h3 mt-1">
-        <div class="col">
+      
+      <ul class="nav nav-pills nav-fill">
+        <li class="nav-item">
           <img :src="ayoba.avatar ? ayoba.avatar : getAssetsFile('logo.png')" class="avathead" />
-        </div>
-        <div class="col my-auto">
           {{ ayoba.nickname ? ayoba.nickname : '(Ayoba UserName)' }}
-        </div>
-        <div class="col my-auto">
+        </li>
+        <li class="nav-item ml-auto">
           <button class="btn btn-sm btn-outline-warning" @click="dologout">
             {{ $t('logout') }}
           </button>
-        </div>
-      </div>
+        </li>
+      </ul>
       <ul class="nav nav-pills nav-fill mb-4 mt-4" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
           <button
