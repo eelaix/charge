@@ -275,7 +275,7 @@ async function fetchData(): Promise<any> {
         snotify.error('amazonaws LoginERROR')
       }
     }
-    setTimeout(fetchData, 5000)
+    setTimeout(fetchData, 1000)
   }
 }
 function selectport(id: number): void {
@@ -995,15 +995,6 @@ function onResult(data: any): void {
 .fg5 {
   color: rgba(128, 128, 128, 0.1);
 }
-.mainbtn {
-  width: 90%;
-  margin: 0 auto;
-  line-height: 4rem;
-  font-size: 2rem;
-}
-.devbox1 {
-  margin: 0 auto;
-}
 .mopay {
   width: 100%;
   margin-top: 20px;
@@ -1107,44 +1098,11 @@ a.disabled {
 .grecaptcha-badge {
   display: none;
 }
-.cheader {
-  margin-top: 10px;
-  margin-left: 10px;
-  line-height: 4rem;
-  font-size: 1.6rem;
-  margin-right: 1rem;
-  vertical-align: middle;
-}
-.chead2 {
-  margin-left: 10px;
-  color: green;
-  line-height: 4rem;
-  font-size: 1.6rem;
-}
-.mybtn {
-}
 .pbox {
   padding: 2vw;
   border-bottom: 1px solid #ddd;
 }
 @media only screen and (orientation: portrait) {
-  .cheader {
-    margin-top: 10px;
-    margin-left: 10px;
-    line-height: 10vw;
-    font-size: 6vw;
-    margin-right: 2vw;
-    vertical-align: middle;
-  }
-  .mybtn {
-    line-height: 5vw;
-    font-size: 4vw;
-  }
-  .chead2 {
-    color: green;
-    line-height: 10vw;
-    font-size: 5vw;
-  }
   .w-ama {
     width: 19vw;
     height: 19vw;
@@ -1168,12 +1126,6 @@ a.disabled {
     margin-top: 5vw;
     font-size: 2vw;
     color: #bbb;
-  }
-  .mainbtn {
-    width: 90%;
-    margin: 0 auto;
-    line-height: 12vw;
-    font-size: 6vw;
   }
 }
 .opacity {
