@@ -381,7 +381,7 @@ function handleOnCanStop() {
   <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
 
   <div v-if="contentId==0">
-    <div class="d-inline-flex h3 mt-1">
+    <div class="d-flex h3 mt-1">
       <div class="col my-auto">
         {{ayoba.nickname}}
       </div>
@@ -394,7 +394,7 @@ function handleOnCanStop() {
         </button>
       </div>
     </div>
-    <div class="d-inline-flex h3 mt-1" :class="loading?'text-danger':'text-secondary'">
+    <div class="d-flex h3 mt-1" :class="loading?'text-danger':'text-secondary'">
       <div class="col my-auto">
         <span v-if="chargerid">chargerID:&nbsp;<span>{{chargerid}}</span></span>
         <span v-else>&lt;ScanQR First&gt;</span>
@@ -409,7 +409,7 @@ function handleOnCanStop() {
       </div>
     </div>
         <div class="text-center mt-1">
-          <div class="d-inline-flex">
+          <div class="d-flex">
             <div class="bdright">
               <div class="pbox" :class="portid==0?'p1':'p0'" id="0" @click="selectme($event)">
                 <div class="xn-ama w-ama">
@@ -542,7 +542,7 @@ function handleOnCanStop() {
 
   <div v-if="contentId==1">
     
-    <div class="d-inline-flex h3 mt-1">
+    <div class="d-flex h3 mt-1">
       <div class="col">
         <img :src="ayoba.avatar" class="avathead"/>
       </div>
@@ -914,11 +914,11 @@ function handleOnCanStop() {
     font-size: 1.6rem;
   }
   .mybtn {}
-  .pbox {
-    padding: 16px;
-    border-bottom: 1px solid #ddd;
-  }
   @media only screen and (orientation: portrait) {
+    .pbox {
+      padding: 2vw;
+      border-bottom: 1px solid #ddd;
+    }
     .cheader {
       margin-top: 10px;
       margin-left: 10px;
@@ -974,6 +974,10 @@ function handleOnCanStop() {
     .mypicker{position: absolute;top:0;z-index:1000;background-color:rgba(102,102,102,0.9);}
   }
   @media only screen and (orientation: landscape) {
+    .pbox {
+      padding: 5vw;
+      border-bottom: 1px solid #ddd;
+    }
     .w-ama {
       width: 80px;
       height: 80px;
