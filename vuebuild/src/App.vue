@@ -483,31 +483,29 @@ function handleOnCanStop() {
     <div v-if="contentId == 0">
       
       <ul class="nav nav-pills nav-fill h3 mt-1">
-        <li class="nav-item">
+        <li class="nav-item text-start my-auto">
           <img
             :src="ayoba.avatar ? ayoba.avatar : getAssetsFile('logo.png')"
             class="avathead img-thumbnail"
           />
           {{ ayoba.nickname ? ayoba.nickname : '(Ayoba UserName)' }}
         </li>
-        <li class="nav-item ml-auto">
+        <li class="nav-item text-end  my-auto">
           {{ ayoba.mybalance }}
           <button type="button" class="btn btn-sm btn-outline-success" @click="inputpays">
             {{ $t('topup') }}
           </button>
         </li>
       </ul>
-      <ul class="nav nav-pills nav-fill h3 mt-1">
-        <li class="nav-item">
+      <ul class="nav nav-pills nav-fill h3 mt-1 align-middle">
+        <li class="nav-item text-start  my-auto">
           <span v-if="charger.chargerid"
             >chargerID:&nbsp;<span>{{ charger.chargerid }}</span></span
           >
           <span v-else>&lt;ScanQR First&gt;</span>
         </li>
-        <li class="nav-item ml-auto">
-          <button class="btn" @click="qrscannow">
-            <img :src="getAssetsFile('scan54.png')" class="wscan img-thumbnail" />
-          </button>
+        <li class="nav-item text-end btn btn-sm  my-auto" @click="qrscannow">
+          <img :src="getAssetsFile('scan54.png')" class="wscan img-thumbnail" />
         </li>
       </ul>
       <div class="text-center mt-1">
@@ -734,11 +732,11 @@ function handleOnCanStop() {
     <div v-if="contentId == 1">
       
       <ul class="nav nav-pills nav-fill">
-        <li class="nav-item">
+        <li class="nav-item text-start">
           <img :src="ayoba.avatar ? ayoba.avatar : getAssetsFile('logo.png')" class="avathead" />
           {{ ayoba.nickname ? ayoba.nickname : '(Ayoba UserName)' }}
         </li>
-        <li class="nav-item ml-auto">
+        <li class="nav-item text-end">
           <button class="btn btn-sm btn-outline-warning" @click="dologout">
             {{ $t('logout') }}
           </button>
