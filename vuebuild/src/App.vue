@@ -183,53 +183,34 @@ async function fetchData(): Promise<any> {
       }
       loads.value++
       if (norefresh.value == false) {
-        let arr: string[], iseq: number
         Object.keys(axresp.data).forEach((key: string) => {
           try{
             if (key == 'sw') {
-              arr = axresp.data[key].split(',')
-              for (iseq = 0; iseq < arr.length; iseq++) {
-                charger.sw[iseq] = Number(arr[iseq])
-              }
+              charger[key] = axresp.data[key]
             } else if (key == 'se') {
-              arr = axresp.data[key].split(',')
-              for (iseq = 0; iseq < arr.length; iseq++) {
-                charger.se[iseq] = Number(arr[iseq])
-              }
+              charger[key] = axresp.data[key]
             } else if (key == 'pi') {
-              arr = axresp.data[key].split(',')
-              for (iseq = 0; iseq < arr.length; iseq++) {
-                charger.pi[iseq] = Number(arr[iseq])
-              }
+              charger[key] = axresp.data[key]
             } else if (key == 'imax') {
-              arr = axresp.data[key].split(',')
-              for (iseq = 0; iseq < arr.length; iseq++) {
-                charger.imax[iseq] = Number(arr[iseq])
-              }
+              charger[key] = axresp.data[key]
             } else if (key == 'ua') {
-              arr = axresp.data[key].split(',')
-              for (iseq = 0; iseq < arr.length; iseq++) {
-                charger.ua[iseq] = arr[iseq]
-              }
+              charger[key] = axresp.data[key]
             } else if (key == 'prizz') {
-              arr = axresp.data[key].split(',')
-              for (iseq = 0; iseq < arr.length; iseq++) {
-                charger.prizz[iseq] = Number(arr[iseq])
-              }
+              charger[key] = axresp.data[key]
             } else if (key == 'tep') {
-              charger.tep = Number(axresp.data[key])
+              charger[key] = axresp.data[key]
             } else if (key == 'mac') {
-              charger.mac = axresp.data[key]
+              charger[key] = axresp.data[key]
             } else if (key == 'beep') {
-              charger.beep = axresp.data[key]
+              charger[key] = axresp.data[key]
             } else if (key == 'cbk') {
-              charger.cbk = Number(axresp.data[key])
+              charger[key] = axresp.data[key]
             } else if (key == 'pow') {
-              charger.pow = Number(axresp.data[key])
+              charger[key] = axresp.data[key]
             } else if (key == 'stp') {
-              charger.stp = Number(axresp.data[key])
+              charger[key] = axresp.data[key]
             } else if (key == 'act') {
-              charger.act = Number(axresp.data[key])
+              charger[key] = axresp.data[key]
             } else if (key == 'myid') {
               _myid = Number(axresp.data[key])
             }
