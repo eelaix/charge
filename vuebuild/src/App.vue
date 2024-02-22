@@ -55,7 +55,20 @@ const charger = reactive({
   beep: '00:00:00',
   prizz: [0, 0, 0, 0, 0, 0],
   imax: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-  pi: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  pi: [
+    '0.01',
+    '0.01',
+    '0.01',
+    '0.01',
+    '0.01',
+    '0.01',
+    '0.01',
+    '0.01',
+    '0.01',
+    '0.01',
+    '0.01',
+    '0.01'
+  ],
   sw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   se: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ua: ['', '', '', '', '', '', '', '', '', '', '', '']
@@ -262,7 +275,7 @@ async function fetchData(): Promise<any> {
         snotify.error('amazonaws LoginERROR')
       }
     }
-    setTimeout(fetchData, 2000)
+    setTimeout(fetchData, 5000)
   }
 }
 function selectport(id: number): void {
@@ -455,7 +468,6 @@ function onResult(data: any): void {
 </script>
 <template>
   <div class="container-md">
-
     <div v-if="contentId == 0">
       <ul class="nav nav-pills nav-fill h3 mt-1">
         <li class="nav-item text-start my-auto">
@@ -914,13 +926,7 @@ function onResult(data: any): void {
     <vue3-notify />
     <div v-if="loads == 0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="showhours" class="mask opacity" @click="closeme">&nbsp;</div>
-    <StreamQrcodeBarcodeReader
-      ref="refCamera"
-      capture="shoot"
-      show-on-stream
-      @result="onResult"
-    />
-
+    <StreamQrcodeBarcodeReader ref="refCamera" capture="shoot" show-on-stream @result="onResult" />
   </div>
 </template>
 
