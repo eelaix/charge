@@ -436,7 +436,7 @@ async function dochargebk(): Promise<any> {
   }
 }
 const decode = ref<any>(undefined)
-const isLoading = ref<boolean>(false)
+const cam_isLoading = ref<boolean>(false)
 function onResult(data: any): void {
   if (data) {
     decode.value = data?.text
@@ -453,24 +453,24 @@ function onResult(data: any): void {
   }
 }
 function onLoading(loading: boolean) {
-  console.log('scan onloading:' + loading)
-  isLoading.value = loading
+  snotify.success('onloading:' + loading)
+  cam_isLoading.value = loading
 }
 const refCamera = ref<InstanceType<typeof StreamQrcodeBarcodeReader> | null>(null)
 function handleOnCanPlay() {
-  console.log('scan handleOnCanPlay')
+  snotify.info('handleOnCanPlay')
   refCamera.value?.onCanPlay()
 }
 function handleOnReset() {
-  console.log('scan onReset')
+  snotify.error('scan onReset')
   refCamera.value?.onReset()
 }
 function handleFacemode() {
-  console.log('scan onChangeFacemode')
+  console.log('onChangeFacemode')
   refCamera.value?.onChangeFacemode()
 }
 function handleOnCanStop() {
-  console.log('scan onCanStop')
+  snotify.warning('onCanStop')
   refCamera.value?.onCanStop()
 }
 </script>
@@ -937,7 +937,7 @@ function handleOnCanStop() {
 
     <div v-if="contentId == 2">
       <div class="flex justify-center items-center mt-10">
-        <template v-if="isLoading">
+        <template v-if="cam_isLoading">
           <button class="bg-yellow-300 px-6 py-1 rounded-md me-4" @click="handleFacemode">
             Facemode
           </button>
@@ -957,7 +957,7 @@ function handleOnCanStop() {
           <div class="notch"></div>
         </div>
         <div class="content">
-          <template v-if="!isLoading">
+          <template v-if="!cam_isLoading">
             <h1 class="text-xl mb-2">Reader Barcode & QRCode</h1>
             <h2 class="text-base text-red-500 capitalize mb-4">mode: shoot</h2>
           </template>
