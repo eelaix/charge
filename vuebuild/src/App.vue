@@ -37,14 +37,28 @@ const ayoba = reactive({
   mybalnum:0,
   mybalance:'0.00'
 });
+const charger = reactive({
+  mac:'',
+  chargerid: 10000,
+  tep:0,
+  pow:0,
+  stp:0,
+  act:0,
+  cbk:0,
+  beep:'00:00:00',
+  prizz:[0,0,0,0,0,0],
+  imax:[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  pi:[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+  sw:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  se:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ua:['','','','','','','','','','','','']
+});
 const payfullname = ref<string>(localStorage.pfname);
 const payamount = ref<number>(localStorage.preprepay?Number(localStorage.preprepay):prepaylimit);
-const mac = ref<string>('');
 const btntext = ref<string>('ChargeNOW');
 const loads = ref<number>(0);
 const portid = ref<number>(-1);
 const contentId = ref<number>(0);
-const chargerid = ref<number>(10000);
 const vcardtargetuser = ref<string>('');
 const vcardnumber = ref<string>('');
 const vcardbtn_text = ref<string>(t('vcardactivenow'));
@@ -57,9 +71,11 @@ const momobtnclicked = ref<boolean>(false);
 const vcardbtnclicked = ref<boolean>(false);
 const thehours = reactive<string[]>(['10', '1', '2', '3', '4', '6', '8', '15']);
 const st = reactive<string[]>(['Free', 'SwitchON', 'Charging', 'Disabled', 'StopDN', 'Offline', 'noID']);
-const sw = reactive<number[]>([0, 1, 2, 3, 4, 5, 0, 0, 0, 0, 0, 0]);
-const se = reactive<number[]>([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-const ua = reactive<string[]>(['', '', '', '', '', '', '', '', '', '', '', '']);
+// const sw = reactive<number[]>([0, 1, 2, 3, 4, 5, 0, 0, 0, 0, 0, 0]);
+// const se = reactive<number[]>([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+// const pi = reactive<number[]>([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]);
+// const imax = reactive<number[]>([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]);
+// const ua = reactive<string[]>(['', '', '', '', '', '', '', '', '', '', '', '']);
 
 onMounted(() => {
   getUserName((username:string) => { ayoba.nickname = username; });
@@ -134,10 +150,10 @@ function paystackcancel():void {
 async function fetchData():Promise<any> {
   if ( ayoba.mytoken ) {
     let qryparams:string = 'token=' + ayoba.mytoken + '&loads=' + loads.value;
-    if (mac.value) {
-      qryparams = qryparams + '&mac=' + mac.value;
+    if (charger.mac) {
+      qryparams = qryparams + '&mac=' + charger.mac;
     } else {
-      qryparams = qryparams + '&id=' + chargerid.value;
+      qryparams = qryparams + '&id=' + charger.chargerid;
     }
     loading.value = true;
     let axresp:any = await axios.post('/getonebk?tm=' + new Date().getTime(), qryparams);
@@ -148,15 +164,61 @@ async function fetchData():Promise<any> {
       }
       loads.value++;
       if ( norefresh.value ==  false ){
+        let arr:string[], iseq:number;
         Object.keys(axresp.data).forEach((key:string) => {
-          // this[key] = axresp.data[key];
-          console.log(key+'='+axresp.data[key]);
+          if ( key=='sw') {
+            arr = axresp.data[key].split(',');
+            for(iseq=0;iseq<arr.length;iseq++) {
+              charger.sw[iseq] = Number(arr[iseq]);
+            }
+          } else if ( key=='se' ) {
+            arr = axresp.data[key].split(',');
+            for(iseq=0;iseq<arr.length;iseq++) {
+              charger.se[iseq] = Number(arr[iseq]);
+            }
+          } else if ( key=='pi' ) {
+            arr = axresp.data[key].split(',');
+            for(iseq=0;iseq<arr.length;iseq++) {
+              charger.pi[iseq] = Number(arr[iseq]);
+            }
+          } else if ( key=='imax' ) {
+            arr = axresp.data[key].split(',');
+            for(iseq=0;iseq<arr.length;iseq++) {
+              charger.imax[iseq] = Number(arr[iseq]);
+            }
+          } else if ( key=='ua' ) {
+            arr = axresp.data[key].split(',');
+            for(iseq=0;iseq<arr.length;iseq++) {
+              charger.ua[iseq] = arr[iseq];
+            }
+          } else if ( key=='prizz' ) {
+            arr = axresp.data[key].split(',');
+            for(iseq=0;iseq<arr.length;iseq++) {
+              charger.prizz[iseq] = Number(arr[iseq]);
+            }
+          } else if ( key=='tep' ) {
+            charger.tep = Number(axresp.data[key]);
+          } else if ( key=='mac' ) {
+            charger.mac = axresp.data[key];
+          } else if ( key=='beep' ) {
+            charger.beep = axresp.data[key];
+          } else if ( key=='cbk' ) {
+            charger.cbk = Number(axresp.data[key]);
+          } else if ( key=='pow' ) {
+            charger.pow = Number(axresp.data[key]);
+          } else if ( key=='stp' ) {
+            charger.stp = Number(axresp.data[key]);
+          } else if ( key=='act' ) {
+            charger.act = Number(axresp.data[key]);
+          } else if ( key=='myid' ) {
+            _myid = Number(axresp.data[key]);
+          }
         });
         if (portid.value>-1) {
           selectport(portid.value);
         }
       } else {
-        if (sw[portid.value]!=axresp.data.sw[portid.value]) {
+        if (charger.sw[portid.value]!=axresp.data.sw[portid.value]) {
           norefresh.value = false;
         }
       }
@@ -191,18 +253,18 @@ async function fetchData():Promise<any> {
 }
 function selectport(id:number):void {
   noclick.value = true;
-  if (sw[id] == 0) {
+  if (charger.sw[id] == 0) {
     btntext.value = t('DoCharge')+'(#' + (id + 1) + 'SOCKET)';
     noclick.value = false;
-  } else if (sw[id] == 1 || sw[id] == 2) {
+  } else if (charger.sw[id] == 1 || charger.sw[id] == 2) {
     let nowtime:number = new Date().getTime();
-    let timeremind:number = se[id] - nowtime;
+    let timeremind:number = charger.se[id] - nowtime;
     if (timeremind < 0) {
       if (_myid == id) {
         btntext.value = t('StopNOW');
         noclick.value = false;
       } else {
-        btntext.value = ua[id] + ' ' + t('Charging');
+        btntext.value = charger.ua[id] + ' ' + t('Charging');
       }
     } else {
       let timeused:number = timeremind / 1000;
@@ -218,19 +280,19 @@ function selectport(id:number):void {
         noclick.value = false;
       } else {
         if (minutes > 600) {
-          btntext.value = ua[id];
+          btntext.value = charger.ua[id];
         } else {
-          btntext.value = ua[id] + '@' + retime + '';
+          btntext.value = charger.ua[id] + '@' + retime + '';
         }
       }
     }
-  } else if (sw[id] == 3) {
+  } else if (charger.sw[id] == 3) {
     id = -1;
     btntext.value = 'PortDisabled';
-  } else if (sw[id] == 4) {
+  } else if (charger.sw[id] == 4) {
     id = -1;
     btntext.value = t('StopKeyDown');
-  } else if (sw[id] == 5) {
+  } else if (charger.sw[id] == 5) {
     if (_myid == id) {
       btntext.value = t('Clearme');
       noclick.value = false;
@@ -318,8 +380,8 @@ async function activevcard():Promise<any> {
 async function dochargebk():Promise<any> {
   noclick.value = true;
   norefresh.value = true;
-  let doparams:string = 'token=' + ayoba.mytoken + '&mac=' + mac.value + '&portid=' + portid.value + '&hourid=' + hourid.value;
-  if ( sw[portid.value] == 0 ) {
+  let doparams:string = 'token=' + ayoba.mytoken + '&mac=' + charger.mac + '&portid=' + portid.value + '&hourid=' + hourid.value;
+  if ( charger.sw[portid.value] == 0 ) {
     btntext.value = t('Starting');
     await axios.post('/dochargebk?tm=' + new Date().getTime(), doparams);
     setTimeout(() => { noclick.value = false; norefresh.value = false; }, 10000);
@@ -342,7 +404,8 @@ function onResult(data:any): void {
     decode.value = data?.text;
     let numid:number = Number(decode.value);
     if ( decode.value?.length==5 && (''+numid)==decode.value ) {
-      chargerid.value = numid;
+      charger.chargerid = numid;
+      charger.mac = '';
       contentId.value = 0;
     }
   }
@@ -350,10 +413,6 @@ function onResult(data:any): void {
 function onLoading(loading: boolean) {
   console.log('scan onloading:'+loading);
   isLoading.value = loading
-}
-function onLoaded() {
-  console.log('scan onLoaded');
-  // refCamera.value?.onCanPlay()
 }
 const refCamera = ref<InstanceType<typeof StreamQrcodeBarcodeReader> | null>(null)
 function handleOnCanPlay() {
@@ -396,7 +455,7 @@ function handleOnCanStop() {
     </div>
     <div class="d-flex h3 mt-1" :class="loading?'text-danger':'text-secondary'">
       <div class="col my-auto">
-        <span v-if="chargerid">chargerID:&nbsp;<span>{{chargerid}}</span></span>
+        <span v-if="charger.chargerid">chargerID:&nbsp;<span>{{charger.chargerid}}</span></span>
         <span v-else>&lt;ScanQR First&gt;</span>
       </div>
       <div class="col">&nbsp;
@@ -413,104 +472,104 @@ function handleOnCanStop() {
             <div class="bdright">
               <div class="pbox" :class="portid==0?'p1':'p0'" id="0" @click="selectme($event)">
                 <div class="xn-ama w-ama">
-                  <div class="xn-amb w-amb" :class="portid==0?'d1 bg'+sw[0]:'d0 bg'+sw[0]">
-                    <div class="fixed" :class="'fg'+sw[0]">{{chargerid?'1':'-'}}</div>
+                  <div class="xn-amb w-amb" :class="portid==0?'d1 bg'+charger.sw[0]:'d0 bg'+charger.sw[0]">
+                    <div class="fixed" :class="'fg'+charger.sw[0]">{{charger.chargerid?'1':'-'}}</div>
                   </div>
-                  <div class="tinyst">{{$t(st[sw[0]])}}</div>
+                  <div class="tinyst">{{$t(st[charger.sw[0]])}}</div>
                 </div>
               </div>
               <div class="pbox" :class="portid==4?'p1':'p0'" id="4" @click="selectme($event)">
                 <div class="xn-ama w-ama">
-                  <div class="xn-amb w-amb" :class="portid==4?'d1 bg'+sw[4]:'d0 bg'+sw[4]">
-                    <div class="fixed" :class="'fg'+sw[4]">{{chargerid?'5':'-'}}</div>
+                  <div class="xn-amb w-amb" :class="portid==4?'d1 bg'+charger.sw[4]:'d0 bg'+charger.sw[4]">
+                    <div class="fixed" :class="'fg'+charger.sw[4]">{{charger.chargerid?'5':'-'}}</div>
                   </div>
-                  <div class="tinyst">{{$t(st[sw[4]])}}</div>
+                  <div class="tinyst">{{$t(st[charger.sw[4]])}}</div>
                 </div>
               </div>
               <div class="pbox" :class="portid==8?'p1':'p0'" id="8" @click="selectme($event)">
                 <div class="xn-ama w-ama">
-                  <div class="xn-amb w-amb" :class="portid==8?'d1 bg'+sw[8]:'d0 bg'+sw[8]">
-                    <div class="fixed" :class="'fg'+sw[8]">{{chargerid?'9':'-'}}</div>
+                  <div class="xn-amb w-amb" :class="portid==8?'d1 bg'+charger.sw[8]:'d0 bg'+charger.sw[8]">
+                    <div class="fixed" :class="'fg'+charger.sw[8]">{{charger.chargerid?'9':'-'}}</div>
                   </div>
-                  <div class="tinyst">{{$t(st[sw[8]])}}</div>
+                  <div class="tinyst">{{$t(st[charger.sw[8]])}}</div>
                 </div>
               </div>
             </div>
             <div class="bdright">
               <div class="pbox" :class="portid==1?'p1':'p0'" id="1" @click="selectme($event)">
                 <div class="xn-ama w-ama">
-                  <div class="xn-amb w-amb" :class="portid==1?'d1 bg'+sw[1]:'d0 bg'+sw[1]">
-                    <div class="fixed" :class="'fg'+sw[1]">{{chargerid?'2':'-'}}</div>
+                  <div class="xn-amb w-amb" :class="portid==1?'d1 bg'+charger.sw[1]:'d0 bg'+charger.sw[1]">
+                    <div class="fixed" :class="'fg'+charger.sw[1]">{{charger.chargerid?'2':'-'}}</div>
                   </div>
-                  <div class="tinyst">{{$t(st[sw[1]])}}</div>
+                  <div class="tinyst">{{$t(st[charger.sw[1]])}}</div>
                 </div>
               </div>
               <div class="pbox" :class="portid==5?'p1':'p0'" id="5" @click="selectme($event)">
                 <div class="xn-ama w-ama">
-                  <div class="xn-amb w-amb" :class="portid==5?'d1 bg'+sw[5]:'d0 bg'+sw[5]">
-                    <div class="fixed" :class="'fg'+sw[5]">{{chargerid?'6':'-'}}</div>
+                  <div class="xn-amb w-amb" :class="portid==5?'d1 bg'+charger.sw[5]:'d0 bg'+charger.sw[5]">
+                    <div class="fixed" :class="'fg'+charger.sw[5]">{{charger.chargerid?'6':'-'}}</div>
                   </div>
-                  <div class="tinyst">{{$t(st[sw[5]])}}</div>
+                  <div class="tinyst">{{$t(st[charger.sw[5]])}}</div>
                 </div>
               </div>
               <div class="pbox" :class="portid==9?'p1':'p0'" id="9" @click="selectme($event)">
                 <div class="xn-ama w-ama">
-                  <div class="xn-amb w-amb" :class="portid==9?'d1 bg'+sw[9]:'d0 bg'+sw[9]">
-                    <div class="fixed" :class="'fg'+sw[9]">{{chargerid?'10':'-'}}</div>
+                  <div class="xn-amb w-amb" :class="portid==9?'d1 bg'+charger.sw[9]:'d0 bg'+charger.sw[9]">
+                    <div class="fixed" :class="'fg'+charger.sw[9]">{{charger.chargerid?'10':'-'}}</div>
                   </div>
-                  <div class="tinyst">{{$t(st[sw[9]])}}</div>
+                  <div class="tinyst">{{$t(st[charger.sw[9]])}}</div>
                 </div>
               </div>
             </div>
             <div class="bdright">
               <div class="pbox" :class="portid==2?'p1':'p0'" id="2" @click="selectme($event)">
                 <div class="xn-ama w-ama">
-                  <div class="xn-amb w-amb" :class="portid==2?'d1 bg'+sw[2]:'d0 bg'+sw[2]">
-                    <div class="fixed" :class="'fg'+sw[2]">{{chargerid?'3':'-'}}</div>
+                  <div class="xn-amb w-amb" :class="portid==2?'d1 bg'+charger.sw[2]:'d0 bg'+charger.sw[2]">
+                    <div class="fixed" :class="'fg'+charger.sw[2]">{{charger.chargerid?'3':'-'}}</div>
                   </div>
-                  <div class="tinyst">{{$t(st[sw[2]])}}</div>
+                  <div class="tinyst">{{$t(st[charger.sw[2]])}}</div>
                 </div>
               </div>
               <div class="pbox" :class="portid==6?'p1':'p0'" id="6" @click="selectme($event)">
                 <div class="xn-ama w-ama">
-                  <div class="xn-amb w-amb" :class="portid==6?'d1 bg'+sw[6]:'d0 bg'+sw[6]">
-                    <div class="fixed" :class="'fg'+sw[6]">{{chargerid?'7':'-'}}</div>
+                  <div class="xn-amb w-amb" :class="portid==6?'d1 bg'+charger.sw[6]:'d0 bg'+charger.sw[6]">
+                    <div class="fixed" :class="'fg'+charger.sw[6]">{{charger.chargerid?'7':'-'}}</div>
                   </div>
-                  <div class="tinyst">{{$t(st[sw[6]])}}</div>
+                  <div class="tinyst">{{$t(st[charger.sw[6]])}}</div>
                 </div>
               </div>
               <div class="pbox" :class="portid==10?'p1':'p0'" id="10" @click="selectme($event)">
                 <div class="xn-ama w-ama">
-                  <div class="xn-amb w-amb" :class="portid==10?'d1 bg'+sw[10]:'d0 bg'+sw[10]">
-                    <div class="fixed" :class="'fg'+sw[10]">{{chargerid?'11':'-'}}</div>
+                  <div class="xn-amb w-amb" :class="portid==10?'d1 bg'+charger.sw[10]:'d0 bg'+charger.sw[10]">
+                    <div class="fixed" :class="'fg'+charger.sw[10]">{{charger.chargerid?'11':'-'}}</div>
                   </div>
-                  <div class="tinyst">{{$t(st[sw[10]])}}</div>
+                  <div class="tinyst">{{$t(st[charger.sw[10]])}}</div>
                 </div>
               </div>
             </div>
             <div class="weui-flex__item">
               <div class="pbox" :class="portid==3?'p1':'p0'" id="3" @click="selectme($event)">
                 <div class="xn-ama w-ama">
-                  <div class="xn-amb w-amb" :class="portid==3?'d1 bg'+sw[3]:'d0 bg'+sw[3]">
-                    <div class="fixed" :class="'fg'+sw[3]">{{chargerid?'4':'-'}}</div>
+                  <div class="xn-amb w-amb" :class="portid==3?'d1 bg'+charger.sw[3]:'d0 bg'+charger.sw[3]">
+                    <div class="fixed" :class="'fg'+charger.sw[3]">{{charger.chargerid?'4':'-'}}</div>
                   </div>
-                  <div class="tinyst">{{$t(st[sw[3]])}}</div>
+                  <div class="tinyst">{{$t(st[charger.sw[3]])}}</div>
                 </div>
               </div>
               <div class="pbox" :class="portid==7?'p1':'p0'" id="7" @click="selectme($event)">
                 <div class="xn-ama w-ama">
-                  <div class="xn-amb w-amb" :class="portid==7?'d1 bg'+sw[7]:'d0 bg'+sw[7]">
-                    <div class="fixed" :class="'fg'+sw[7]">{{chargerid?'8':'-'}}</div>
+                  <div class="xn-amb w-amb" :class="portid==7?'d1 bg'+charger.sw[7]:'d0 bg'+charger.sw[7]">
+                    <div class="fixed" :class="'fg'+charger.sw[7]">{{charger.chargerid?'8':'-'}}</div>
                   </div>
-                  <div class="tinyst">{{$t(st[sw[7]])}}</div>
+                  <div class="tinyst">{{$t(st[charger.sw[7]])}}</div>
                 </div>
               </div>
               <div class="pbox" :class="portid==11?'p1':'p0'" id="11" @click="selectme($event)">
                 <div class="xn-ama w-ama">
-                  <div class="xn-amb w-amb" :class="portid==11?'d1 bg'+sw[11]:'d0 bg'+sw[11]">
-                    <div class="fixed" :class="'fg'+sw[11]">{{chargerid?'12':'-'}}</div>
+                  <div class="xn-amb w-amb" :class="portid==11?'d1 bg'+charger.sw[11]:'d0 bg'+charger.sw[11]">
+                    <div class="fixed" :class="'fg'+charger.sw[11]">{{charger.chargerid?'12':'-'}}</div>
                   </div>
-                  <div class="tinyst">{{$t(st[sw[11]])}}</div>
+                  <div class="tinyst">{{$t(st[charger.sw[11]])}}</div>
                 </div>
               </div>
             </div>
@@ -706,7 +765,6 @@ function handleOnCanStop() {
           ref="refCamera"
           capture="shoot"
           show-on-stream
-          @loaded="onLoaded"
           @onloading="onLoading"
           @result="onResult"
         />
