@@ -8,5 +8,8 @@ export default defineConfig({
     vue(), viteSingleFile(),
   ],
   publicDir: 'public',
-  build: {outDir: '../docs'},
+  build: {
+    outDir: '../docs',
+    target: 'es2015'
+  },
 })
