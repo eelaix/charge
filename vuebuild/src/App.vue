@@ -408,9 +408,6 @@ function handleOnCanStop() {
         </button>
       </div>
     </div>
-<!--    <div class="d-block text-success mt-1" v-if="chargerid>0 && portid==-1">
-        SELECT Free Socket (GREEN) First.
-    </div -->
         <div class="text-center mt-1">
           <div class="d-inline-flex">
             <div class="bdright">
