@@ -44,8 +44,8 @@ const ayoba = reactive({
   mybalance: '0.00'
 })
 const charger = reactive({
-  mac: '',
   chargerid: 10000,
+  mac: '',
   tep: 0,
   pow: 0,
   stp: 0,
@@ -750,7 +750,7 @@ function handleOnCanStop() {
       <ul class="nav nav-pills nav-fill mb-4 mt-4" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
           <button
-            class="active btn btn-warning w-50"
+            class="active btn btn-warning w-75"
             id="paystack-tab"
             data-bs-toggle="tab"
             data-bs-target="#paystack"
@@ -764,7 +764,7 @@ function handleOnCanStop() {
         </li>
         <li class="nav-item" role="presentation">
           <button
-            class="btn btn-success w-50"
+            class="btn btn-success w-75"
             id="momo-tab"
             data-bs-toggle="tab"
             data-bs-target="#momo"
@@ -779,7 +779,7 @@ function handleOnCanStop() {
         </li>
         <li class="nav-item" role="presentation">
           <button
-            class="btn btn-info w-50"
+            class="btn btn-info w-75"
             id="vcard-tab"
             data-bs-toggle="tab"
             data-bs-target="#vcard"
