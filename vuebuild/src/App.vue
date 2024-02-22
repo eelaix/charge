@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 let _keeploading: boolean = true
+let _pauseFetch: boolean = false
 let _myid: number = -1
 function getURLParameter(sParam: string): string {
   let sPageURL: string = window.location.search.substring(1),
@@ -19,6 +20,8 @@ import 'bootstrap/dist/css/bootstrap.css'
 import paystack from 'vue3-paystack'
 import { nanoid } from 'nanoid'
 import { useI18n } from 'vue-i18n'
+import { ref, reactive, inject, onMounted, onUnmounted } from 'vue'
+import { StreamQrcodeBarcodeReader } from 'vue3-barcode-qrcode-reader'
 import { paystackpublickey, prepaylimit, defaultpaystackid, getAssetsFile } from './config'
 import {
   getUserPhoneNumber,
@@ -27,8 +30,6 @@ import {
   getUserAvatar,
   closeApp
 } from 'ayoba-microapp-api'
-import { ref, reactive, inject, onMounted, onUnmounted } from 'vue'
-import { StreamQrcodeBarcodeReader } from 'vue3-barcode-qrcode-reader'
 const axios: any = inject('axios')
 const snotify: any = inject('vue3-notify')
 const { t } = useI18n()
@@ -69,10 +70,9 @@ const loads = ref<number>(1)
 const portid = ref<number>(-1)
 const contentId = ref<number>(0)
 const hourid = ref<number>(parseInt(localStorage.horid, 10) || 0)
-const noclick = ref<boolean>(true)
 const loading = ref<boolean>(false)
-const norefresh = ref<boolean>(false)
-const disphours = ref<boolean>(false)
+const showhours = ref<boolean>(false)
+const charge_invalid = ref<boolean>(true)
 const momobtnclicked = ref<boolean>(false)
 const vcardbtnclicked = ref<boolean>(false)
 const thehours = reactive<string[]>(['10', '1', '2', '3', '4', '6', '8', '15'])
@@ -179,7 +179,11 @@ async function fetchData(): Promise<any> {
     loading.value = false
     if (axresp && axresp.status >= 200) {
       loads.value++
-      if (norefresh.value == false) {
+      if (_pauseFetch == true) {
+        if (charger.sw[portid.value] != axresp.data.sw[portid.value]) {
+          _pauseFetch = false
+        }
+      } else {
         Object.keys(axresp.data).forEach((key: string) => {
           try {
             if (key == 'sw') {
@@ -217,10 +221,6 @@ async function fetchData(): Promise<any> {
         })
         if (portid.value > -1) {
           selectport(portid.value)
-        }
-      } else {
-        if (charger.sw[portid.value] != axresp.data.sw[portid.value]) {
-          norefresh.value = false
         }
       }
       if (loads.value < 100) {
@@ -264,17 +264,17 @@ async function fetchData(): Promise<any> {
   }
 }
 function selectport(id: number): void {
-  noclick.value = true
+  charge_invalid.value = true
   if (charger.sw[id] == 0) {
     btntext.value = t('DoCharge') + '(#' + (id + 1) + 'SOCKET)'
-    noclick.value = false
+    charge_invalid.value = false
   } else if (charger.sw[id] == 1 || charger.sw[id] == 2) {
     let nowtime: number = new Date().getTime()
     let timeremind: number = charger.se[id] - nowtime
     if (timeremind < 0) {
       if (_myid == id) {
         btntext.value = t('StopNOW')
-        noclick.value = false
+        charge_invalid.value = false
       } else {
         btntext.value = charger.ua[id] + ' ' + t('Charging')
       }
@@ -289,7 +289,7 @@ function selectport(id: number): void {
         } else {
           btntext.value = retime + ',' + t('StopNOW')
         }
-        noclick.value = false
+        charge_invalid.value = false
       } else {
         if (minutes > 600) {
           btntext.value = charger.ua[id]
@@ -307,7 +307,7 @@ function selectport(id: number): void {
   } else if (charger.sw[id] == 5) {
     if (_myid == id) {
       btntext.value = t('Clearme')
-      noclick.value = false
+      charge_invalid.value = false
     } else {
       id = -1
       btntext.value = t('DeviceOffline')
@@ -336,16 +336,16 @@ function selectme(e: any): void {
     snotify.success('SELECT Free Socket First.')
   }
 }
-function showhours(): void {
-  disphours.value = true
+function selecthour(): void {
+  showhours.value = true
 }
 function closeme(): void {
-  disphours.value = false
+  showhours.value = false
 }
 function selectfee(e: any): void {
   hourid.value = parseInt(e.currentTarget.id, 10)
   localStorage.horid = hourid.value
-  disphours.value = false
+  showhours.value = false
 }
 async function activevcard(): Promise<any> {
   vcardbtnclicked.value = true
@@ -403,8 +403,8 @@ async function activevcard(): Promise<any> {
   }
 }
 async function dochargebk(): Promise<any> {
-  noclick.value = true
-  norefresh.value = true
+  charge_invalid.value = true
+  _pauseFetch = true
   let doparams: string =
     'token=' +
     ayoba.mytoken +
@@ -418,16 +418,16 @@ async function dochargebk(): Promise<any> {
     btntext.value = t('Starting')
     await axios.post('/dochargebk?tm=' + new Date().getTime(), doparams)
     setTimeout(() => {
-      noclick.value = false
-      norefresh.value = false
+      charge_invalid.value = false
+      _pauseFetch = false
     }, 10000)
   } else if (_myid == portid.value) {
     btntext.value = t('Stoping') + '...'
     doparams = doparams + '&cmd=1'
     await axios.post('/userdocmd?tm=' + new Date().getTime(), doparams)
     setTimeout(() => {
-      noclick.value = false
-      norefresh.value = false
+      charge_invalid.value = false
+      _pauseFetch = false
     }, 10000)
   }
   loads.value = 4
@@ -478,7 +478,7 @@ function handleOnCanStop() {
   <div class="container-md">
     <vue3-notify />
     <div v-if="loads == 0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
-    <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
+    <div v-if="showhours" class="mask opacity" @click="closeme">&nbsp;</div>
 
     <div v-if="contentId == 0">
       <ul class="nav nav-pills nav-fill h3 mt-1">
@@ -672,7 +672,7 @@ function handleOnCanStop() {
           </div>
         </div>
       </div>
-      <button class="btn btn-outline-info w-100 mt-3" @click="showhours">
+      <button class="btn btn-outline-info w-100 mt-3" @click="selecthour">
         {{ $t('ChargeTIME') }}: {{ thehours[hourid] }}{{ $t('hors') }}
       </button>
       <button
@@ -686,12 +686,12 @@ function handleOnCanStop() {
         class="btn btn-success w-100 mt-3"
         @click="dochargebk"
         v-if="ayoba.mytoken && ayoba.mybalnum >= 10"
-        :disabled="noclick"
+        :disabled="charge_invalid"
       >
         {{ btntext }}
       </button>
-      <div class="mypicker pickw" v-if="disphours">
-        <div class="weui-media-box">
+      <div class="mypicker pickw" v-if="showhours">
+        <div>
           <div class="mypanel fs1">{{ $t('bkchargehours') }} :</div>
           <div class="li2 fs2 mt-4">
             <div class="pbo2" :class="hourid == 0 ? 'f0' : 'f1'" id="0" @click="selectfee">
