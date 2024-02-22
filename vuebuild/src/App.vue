@@ -181,7 +181,7 @@ async function fetchData(): Promise<any> {
       loads.value++
       if (norefresh.value == false) {
         Object.keys(axresp.data).forEach((key: string) => {
-          try{
+          try {
             if (key == 'sw') {
               charger[key] = axresp.data[key]
             } else if (key == 'se') {
@@ -211,8 +211,8 @@ async function fetchData(): Promise<any> {
             } else if (key == 'myid') {
               _myid = Number(axresp.data[key])
             }
-          }catch(e){
-            console.log(key,axresp.data[key])
+          } catch (e) {
+            console.log(key, axresp.data[key])
           }
         })
         if (portid.value > -1) {
@@ -475,24 +475,18 @@ function handleOnCanStop() {
 }
 </script>
 <template>
-
   <div class="container-md">
-
     <vue3-notify />
     <div v-if="loads == 0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
 
     <div v-if="contentId == 0">
-
       <ul class="nav nav-pills nav-fill h3 mt-1">
         <li class="nav-item text-start my-auto">
-          <img
-            :src="ayoba.avatar ? ayoba.avatar : getAssetsFile('logo.png')"
-            class="avathead"
-          />
+          <img :src="ayoba.avatar ? ayoba.avatar : getAssetsFile('logo.png')" class="avathead" />
           {{ ayoba.nickname ? ayoba.nickname : '(Ayoba User)' }}
         </li>
-        <li class="nav-item text-end  my-auto">
+        <li class="nav-item text-end my-auto">
           {{ ayoba.mybalance }}
           <button type="button" class="btn btn-sm btn-outline-success" @click="inputpays">
             {{ $t('topup') }}
@@ -500,13 +494,13 @@ function handleOnCanStop() {
         </li>
       </ul>
       <ul class="nav nav-pills nav-fill h3 mt-1 align-middle">
-        <li class="nav-item text-start  my-auto">
+        <li class="nav-item text-start my-auto">
           <span v-if="charger.chargerid"
             >chargerID:&nbsp;<span>{{ charger.chargerid }}</span></span
           >
           <span v-else>&lt;ScanQR First&gt;</span>
         </li>
-        <li class="nav-item text-end btn btn-sm  my-auto" @click="qrscannow">
+        <li class="nav-item text-end btn btn-sm my-auto" @click="qrscannow">
           <img :src="getAssetsFile('scan54.png')" class="avathead" />
         </li>
       </ul>
@@ -732,7 +726,6 @@ function handleOnCanStop() {
     </div>
 
     <div v-if="contentId == 1">
-      
       <ul class="nav nav-pills nav-fill mt-1">
         <li class="nav-item text-start">
           <img :src="ayoba.avatar ? ayoba.avatar : getAssetsFile('logo.png')" class="avathead" />
@@ -943,7 +936,6 @@ function handleOnCanStop() {
     </div>
 
     <div v-if="contentId == 2">
-
       <div class="flex justify-center items-center mt-10">
         <template v-if="isLoading">
           <button class="bg-yellow-300 px-6 py-1 rounded-md me-4" @click="handleFacemode">
@@ -979,9 +971,7 @@ function handleOnCanStop() {
         </div>
       </div>
     </div>
-
   </div>
-
 </template>
 
 <style scoped>
