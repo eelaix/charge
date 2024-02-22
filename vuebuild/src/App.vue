@@ -918,7 +918,7 @@ function handleOnCanStop() {
   }
   .mybtn {}
   .pbox {
-    padding: 18px;
+    padding: 16px;
     border-bottom: 1px solid #ddd;
   }
   @media only screen and (orientation: portrait) {
