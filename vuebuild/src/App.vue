@@ -381,7 +381,7 @@ function handleOnCanStop() {
   <div v-if="disphours" class="mask opacity" @click="closeme">&nbsp;</div>
 
   <div v-if="contentId==0">
-    <div class="d-flex h3 mt-1">
+    <div class="d-inline-flex h3 mt-1">
       <div class="col my-auto">
         {{ayoba.nickname}}
       </div>
@@ -394,7 +394,7 @@ function handleOnCanStop() {
         </button>
       </div>
     </div>
-    <div class="d-flex h3 mt-1" :class="loading?'text-danger':'text-secondary'">
+    <div class="d-inline-flex h3 mt-1" :class="loading?'text-danger':'text-secondary'">
       <div class="col my-auto">
         <span v-if="chargerid">chargerID:&nbsp;<span>{{chargerid}}</span></span>
         <span v-else>&lt;ScanQR First&gt;</span>
@@ -412,7 +412,7 @@ function handleOnCanStop() {
         SELECT Free Socket (GREEN) First.
     </div -->
         <div class="text-center mt-1">
-          <div class="d-flex">
+          <div class="d-inline-flex">
             <div class="bdright">
               <div class="pbox" :class="portid==0?'p1':'p0'" id="0" @click="selectme($event)">
                 <div class="xn-ama w-ama">
@@ -545,7 +545,7 @@ function handleOnCanStop() {
 
   <div v-if="contentId==1">
     
-    <div class="d-flex h3 mt-1">
+    <div class="d-inline-flex h3 mt-1">
       <div class="col">
         <img :src="ayoba.avatar" class="avathead"/>
       </div>
