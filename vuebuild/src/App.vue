@@ -111,7 +111,7 @@ function channels(): string[] {
   return ['card', 'bank', 'ussd', 'mobile_money']
 }
 function qrscannow(): void {
-  contentId.value = 2
+  refCamera.value?.onCanPlay()
 }
 function dologout(): void {
   ayoba.mytoken = ''
@@ -436,7 +436,7 @@ async function dochargebk(): Promise<any> {
   }
 }
 const decode = ref<any>(undefined)
-const cam_isLoading = ref<boolean>(false)
+const refCamera = ref<InstanceType<typeof StreamQrcodeBarcodeReader> | null>(null)
 function onResult(data: any): void {
   if (data) {
     decode.value = data?.text
@@ -444,37 +444,13 @@ function onResult(data: any): void {
     if (decode.value?.length == 5 && '' + numid == decode.value) {
       charger.chargerid = numid
       charger.mac = ''
-      contentId.value = 0
       loads.value = 5
+      refCamera.value?.onReset()
       if (!_keeploading) {
         fetchData()
       }
     }
   }
-}
-function onLoaded() {
-  snotify.error('onloaded')
-}
-function onLoading(loading: boolean) {
-  snotify.success('onloading:' + loading)
-  cam_isLoading.value = loading
-}
-const refCamera = ref<InstanceType<typeof StreamQrcodeBarcodeReader> | null>(null)
-function handleOnCanPlay() {
-  snotify.info('handleOnCanPlay')
-  refCamera.value?.onCanPlay()
-}
-function handleOnReset() {
-  snotify.error('scan onReset')
-  refCamera.value?.onReset()
-}
-function handleFacemode() {
-  console.log('onChangeFacemode')
-  refCamera.value?.onChangeFacemode()
-}
-function handleOnCanStop() {
-  snotify.warning('onCanStop')
-  refCamera.value?.onCanStop()
 }
 </script>
 <template>
@@ -482,6 +458,12 @@ function handleOnCanStop() {
     <vue3-notify />
     <div v-if="loads == 0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="showhours" class="mask opacity" @click="closeme">&nbsp;</div>
+    <StreamQrcodeBarcodeReader
+      ref="refCamera"
+      capture="shoot"
+      show-on-stream
+      @result="onResult"
+    />
 
     <div v-if="contentId == 0">
       <ul class="nav nav-pills nav-fill h3 mt-1">
@@ -938,43 +920,6 @@ function handleOnCanStop() {
       </div>
     </div>
 
-    <div v-if="contentId == 2">
-      <div class="flex justify-center items-center mt-10">
-        <template v-if="cam_isLoading">
-          <button class="bg-yellow-300 px-6 py-1 rounded-md me-4" @click="handleFacemode">
-            Facemode
-          </button>
-          <button class="bg-red-300 px-6 py-1 rounded-md" @click="handleOnCanStop">Stop</button>
-        </template>
-        <template v-else>
-          <button class="bg-green-300 px-6 py-1 rounded-md" @click="handleOnCanPlay">Stream</button>
-          <button v-if="decode" class="bg-blue-300 px-6 py-1 rounded-md" @click="handleOnReset">
-            Reset
-          </button>
-        </template>
-      </div>
-      <div class="flex flex-col items-center justify-center mt-6"></div>
-      <pre>QRreturn:{{ decode }}</pre>
-      <div class="phone mt-6">
-        <div class="notch-container">
-          <div class="notch"></div>
-        </div>
-        <div class="content">
-          <template v-if="!cam_isLoading">
-            <h1 class="text-xl mb-2">Reader Barcode & QRCode</h1>
-            <h2 class="text-base text-red-500 capitalize mb-4">mode: shoot</h2>
-          </template>
-          <StreamQrcodeBarcodeReader
-            ref="refCamera"
-            capture="shoot"
-            show-on-stream
-            @loaded="onLoaded"
-            @onloading="onLoading"
-            @result="onResult"
-          />
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
