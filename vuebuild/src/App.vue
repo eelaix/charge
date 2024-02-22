@@ -937,7 +937,7 @@ function handleOnCanStop() {
       font-size: 5vw;
     }
     .pbox {
-      padding: 3vw;
+      padding: 5vw;
       border-bottom: 1px solid #ddd;
     }
     .w-ama {
@@ -982,7 +982,7 @@ function handleOnCanStop() {
       width: 500px;
     }
     .pbox {
-      padding: 20px;
+      padding: 18px;
       border-bottom: 1px solid #ddd;
     }
     .w-ama {
