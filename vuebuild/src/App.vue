@@ -383,7 +383,7 @@ function handleOnCanStop() {
   <div v-if="contentId==0">
     <div class="d-flex h3 mt-1">
       <div class="col my-auto">
-        {{ayoba.nickname}}
+        {{ayoba.nickname?ayoba.nickname:'(Ayoba UserName)'}}
       </div>
       <div class="col my-auto">
         {{ayoba.mybalance}}
@@ -402,14 +402,14 @@ function handleOnCanStop() {
       <div class="col">&nbsp;
       </div>
       <div class="col">
-        <img :src="ayoba.avatar" class="avathead img-thumbnail"/>
+        <img :src="ayoba.avatar?ayoba.avatar:getAssetsFile('logo.png')" class="avathead img-thumbnail"/>
         <button class="btn" @click="qrscannow">
           <img :src="getAssetsFile('scan54.png')" class="wscan img-thumbnail"/>
         </button>
       </div>
     </div>
         <div class="text-center mt-1">
-          <div class="d-flex">
+          <div class="d-inline-flex">
             <div class="bdright">
               <div class="pbox" :class="portid==0?'p1':'p0'" id="0" @click="selectme($event)">
                 <div class="xn-ama w-ama">
@@ -544,10 +544,10 @@ function handleOnCanStop() {
     
     <div class="d-flex h3 mt-1">
       <div class="col">
-        <img :src="ayoba.avatar" class="avathead"/>
+        <img :src="ayoba.avatar?ayoba.avatar:getAssetsFile('logo.png')" class="avathead"/>
       </div>
       <div class="col my-auto">
-        {{ayoba.nickname}}
+        {{ayoba.nickname?ayoba.nickname:'(Ayoba UserName)'}}
       </div>
       <div class="col my-auto">
         <button class="btn btn-sm btn-outline-warning" @click="dologout">{{$t('logout')}}</button>
@@ -555,18 +555,17 @@ function handleOnCanStop() {
     </div>
     <ul class="nav nav-pills nav-fill mb-4 mt-4" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link active"
+        <button class="active btn btn-warning w-50"
           id="paystack-tab"
           data-bs-toggle="tab"
           data-bs-target="#paystack"
-          type="button"
           rol="tab"
           aria-controls="paystack"
           aria-selected="true"
           href="#paystack">{{$t('tabpaystack')}}</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link"
+        <button class="btn btn-success w-50"
           id="momo-tab"
           data-bs-toggle="tab"
           data-bs-target="#momo"
@@ -577,7 +576,7 @@ function handleOnCanStop() {
           href="#momo">{{$t('tabmomo')}}</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link"
+        <button class="btn btn-info w-50"
           id="vcard-tab"
           data-bs-toggle="tab"
           data-bs-target="#vcard"
@@ -607,7 +606,7 @@ function handleOnCanStop() {
           <input type="text" class="form-control" v-model="payamount" id="paystackmoney" required maxlength="32" placeholder=""></input>
           <label for="paystackmoney">{{$t('paymoneys')}}</label>
         </div>
-        <paystack buttonClass="btn btn-primary w-100"
+        <paystack buttonClass="btn btn-warning w-100"
           :buttonText = "$t('btn_prepay')"
           :publicKey="paystackpublickey"
           :amount="payamount*100"
@@ -914,11 +913,11 @@ function handleOnCanStop() {
     font-size: 1.6rem;
   }
   .mybtn {}
+  .pbox {
+    padding: 2vw;
+    border-bottom: 1px solid #ddd;
+  }
   @media only screen and (orientation: portrait) {
-    .pbox {
-      padding: 2vw;
-      border-bottom: 1px solid #ddd;
-    }
     .cheader {
       margin-top: 10px;
       margin-left: 10px;
@@ -974,10 +973,6 @@ function handleOnCanStop() {
     .mypicker{position: absolute;top:0;z-index:1000;background-color:rgba(102,102,102,0.9);}
   }
   @media only screen and (orientation: landscape) {
-    .pbox {
-      padding: 5vw;
-      border-bottom: 1px solid #ddd;
-    }
     .w-ama {
       width: 80px;
       height: 80px;
