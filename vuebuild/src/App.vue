@@ -490,7 +490,7 @@ function handleOnCanStop() {
             :src="ayoba.avatar ? ayoba.avatar : getAssetsFile('logo.png')"
             class="avathead"
           />
-          {{ ayoba.nickname ? ayoba.nickname : '(Ayoba UserName)' }}
+          {{ ayoba.nickname ? ayoba.nickname : '(Ayoba User)' }}
         </li>
         <li class="nav-item text-end  my-auto">
           {{ ayoba.mybalance }}
@@ -736,7 +736,7 @@ function handleOnCanStop() {
       <ul class="nav nav-pills nav-fill mt-1">
         <li class="nav-item text-start">
           <img :src="ayoba.avatar ? ayoba.avatar : getAssetsFile('logo.png')" class="avathead" />
-          {{ ayoba.nickname ? ayoba.nickname : '(Ayoba UserName)' }}
+          {{ ayoba.nickname ? ayoba.nickname : '(Ayoba User)' }}
         </li>
         <li class="nav-item text-end">
           <button class="btn btn-sm btn-outline-warning" @click="dologout">
