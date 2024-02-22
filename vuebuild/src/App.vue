@@ -155,7 +155,7 @@ async function paystacksuccess(response: any): Promise<any> {
       ayoba.mybalnum = axresp.data.balnum
       ayoba.mybalance = axresp.data.balance
     }
-    loads.value = 1
+    loads.value = 2
     if (!_keeploading) {
       fetchData()
     }
@@ -178,9 +178,6 @@ async function fetchData(): Promise<any> {
     let axresp: any = await axios.post('/getonebk?tm=' + new Date().getTime(), qryparams)
     loading.value = false
     if (axresp && axresp.status >= 200) {
-      if (loads.value == 0 && portid.value == -1) {
-        snotify.success('SELECT Free Socket (GREEN) First.')
-      }
       loads.value++
       if (norefresh.value == false) {
         Object.keys(axresp.data).forEach((key: string) => {
@@ -235,7 +232,10 @@ async function fetchData(): Promise<any> {
     }
   } else {
     if (ayoba.avatar && ayoba.nickname && ayoba.presence) {
-      if (loads.value == 0) loads.value = 1
+      if (loads.value == 0 && portid.value == -1) {
+        loads.value = 1
+        snotify.success('SELECT Free Socket (GREEN) First.')
+      }
       let qryparams: string =
         'phone=' +
         encodeURIComponent(ayoba.msisdn) +
@@ -328,7 +328,7 @@ function cancelpay(): void {
 function selectme(e: any): void {
   let id: number = parseInt(e.currentTarget.id, 10)
   selectport(id)
-  loads.value = 1
+  loads.value = 3
   if (!_keeploading) {
     fetchData()
   }
@@ -430,7 +430,7 @@ async function dochargebk(): Promise<any> {
       norefresh.value = false
     }, 10000)
   }
-  loads.value = 1
+  loads.value = 4
   if (!_keeploading) {
     fetchData()
   }
@@ -438,7 +438,6 @@ async function dochargebk(): Promise<any> {
 const decode = ref<any>(undefined)
 const isLoading = ref<boolean>(false)
 function onResult(data: any): void {
-  console.log('onResult', data)
   if (data) {
     decode.value = data?.text
     let numid: number = Number(decode.value)
@@ -446,6 +445,10 @@ function onResult(data: any): void {
       charger.chargerid = numid
       charger.mac = ''
       contentId.value = 0
+      loads.value = 5
+      if (!_keeploading) {
+        fetchData()
+      }
     }
   }
 }
