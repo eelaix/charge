@@ -85,6 +85,8 @@ const st = reactive<string[]>([
   'Offline',
   'noID'
 ])
+const decode = ref<any>(undefined)
+const refCamera = ref<InstanceType<typeof StreamQrcodeBarcodeReader> | null>(null)
 
 onMounted(() => {
   getUserName((username: string) => {
@@ -435,8 +437,6 @@ async function dochargebk(): Promise<any> {
     fetchData()
   }
 }
-const decode = ref<any>(undefined)
-const refCamera = ref<InstanceType<typeof StreamQrcodeBarcodeReader> | null>(null)
 function onResult(data: any): void {
   if (data) {
     decode.value = data?.text
@@ -928,15 +928,8 @@ function onResult(data: any): void {
   width: 36px;
   height: 36px;
 }
-.acenter {
-  text-align: center;
-}
 .bdright {
   border-right: 1px solid #ddd;
-}
-.li1 {
-  display: flex;
-  justify-content: space-between;
 }
 .p1 {
   background-color: #9f9;
