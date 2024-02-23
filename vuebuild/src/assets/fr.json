@@ -11,7 +11,7 @@
   "Ready": "Ready",
   "topup": " Top Up ",
   "logout": " Log Out ",
-  "ChargeTIME": "ChargeTIME",
+  "ChargeTIME": "Duration:",
   "hors": "hors",
   "bkchargehours": "plz select charge hour(s).",
   "btn_prepay": "Paystack Top Up",

@@ -508,7 +508,7 @@ function onLoading(loading: boolean): void {
           <span v-if="charger.chargerid"
             >{{ $t('chargerID') }}&nbsp;<span>{{ charger.chargerid }}</span></span
           >
-          <span v-else>&lt;ScanQR First&gt;</span>
+          <span v-else>&lt;Scan Hub QR Code&gt;</span>
         </li>
         <li class="nav-item text-end btn btn-sm my-auto" @click="qrscannow">
           <img :src="getAssetsFile('scan54.png')" class="avathead" />
