@@ -467,14 +467,23 @@ function onResult(data: any): void {
     }
   }
 }
+function onLoading(loading: boolean): void {
+  snotify.success('onLoading:'+loading)
+}
 function handleOnCanStop(): void {
+  snotify.info('OnCanStop')
+  contentId.value = 0
+  refCamera.value?.onReset()
+}
+function handleOnReset(): void {
+  snotify.error('handleOnReset')
   contentId.value = 0
   refCamera.value?.onReset()
 }
 </script>
 <template>
   <div class="container-md">
-    <StreamQrcodeBarcodeReader ref="refCamera" capture="shoot" show-on-stream @result="onResult" />
+    <StreamQrcodeBarcodeReader ref="refCamera" capture="shoot" show-on-stream @onloading="onLoading" @result="onResult" />
 
     <div v-if="contentId == 0">
       <ul class="nav nav-pills nav-fill h3 mt-1">
