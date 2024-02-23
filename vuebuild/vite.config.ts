@@ -10,6 +10,5 @@ export default defineConfig({
   publicDir: 'public',
   build: {
     outDir: '../docs',
-    target: 'es2015'
   },
 })
