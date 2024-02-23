@@ -126,9 +126,16 @@ function reference(): string {
 function channels(): string[] {
   return ['card', 'bank', 'ussd', 'mobile_money']
 }
+function opencamera(): void {
+  if (refCamera && refCamera.value) {
+    refCamera.value.onCanPlay()
+  } else {
+    setTimeout(opencamera, 1000)
+  }
+}
 function qrscannow(): void {
   contentId.value = 2
-  refCamera.value?.onCanPlay()
+  opencamera()
 }
 function dologout(): void {
   ayoba.mytoken = ''
@@ -483,7 +490,6 @@ function onLoading(loading: boolean): void {
 </script>
 <template>
   <div class="container-md">
-    <StreamQrcodeBarcodeReader ref="refCamera" capture="shoot" show-on-stream @onloading="onLoading" @result="onResult" />
 
     <div v-if="contentId == 0">
       <ul class="nav nav-pills nav-fill h3 mt-1">
@@ -944,7 +950,9 @@ function onLoading(loading: boolean): void {
     <div v-if="loads == 0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="showhours" class="mask opacity" @click="closeme">&nbsp;</div>
 
-    <div v-if="contentId == 2">&nbsp;</div>
+    <div v-if="contentId == 2">
+      <StreamQrcodeBarcodeReader ref="refCamera" capture="shoot" show-on-stream @onloading="onLoading" @result="onResult" />
+    </div>
   </div>
 </template>
 
