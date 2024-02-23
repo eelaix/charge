@@ -84,7 +84,7 @@ const loads = ref<number>(0)
 const portid = ref<number>(-1)
 const contentId = ref<number>(0)
 const hourid = ref<number>(parseInt(localStorage.horid, 10) || 0)
-const loading = ref<boolean>(false)
+const isloading = ref<boolean>(false)
 const showhours = ref<boolean>(false)
 const charge_invalid = ref<boolean>(true)
 const momobtnclicked = ref<boolean>(false)
@@ -198,9 +198,9 @@ async function fetchData(): Promise<any> {
     } else {
       qryparams = qryparams + '&id=' + charger.chargerid
     }
-    loading.value = true
+    isloading.value = true
     let axresp: any = await axios.post('/getonebk?tm=' + new Date().getTime(), qryparams)
-    loading.value = false
+    isloading.value = false
     if (axresp && axresp.status >= 200) {
       loads.value++
       if (_pauseFetch == true) {
@@ -504,7 +504,7 @@ function onLoading(loading: boolean): void {
         </li>
       </ul>
       <ul class="nav nav-pills nav-fill h3 mt-1 align-middle">
-        <li class="nav-item text-start my-auto">
+        <li class="nav-item text-start my-auto" :class="isloading?'text-success':'text-secondary'">
           <span v-if="charger.chargerid"
             >{{ $t('chargerID') }}&nbsp;<span>{{ charger.chargerid }}</span></span
           >
