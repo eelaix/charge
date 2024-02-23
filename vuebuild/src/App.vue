@@ -504,8 +504,8 @@ function onLoading(loading: boolean): void {
         </li>
       </ul>
       <ul class="nav nav-pills nav-fill h3 mt-1 align-middle">
-        <li class="nav-item text-start my-auto" :class="isloading?'text-success':'text-secondary'">
-          <span v-if="charger.chargerid"
+        <li class="nav-item text-start my-auto">
+          <span v-if="charger.chargerid" :class="isloading?'text-danger':'text-success'"
             >{{ $t('chargerID') }}&nbsp;<span>{{ charger.chargerid }}</span></span
           >
           <span v-else>&lt;Scan Hub QR Code&gt;</span>
