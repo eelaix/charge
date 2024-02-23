@@ -467,6 +467,10 @@ function onResult(data: any): void {
     }
   }
 }
+function handleOnCanStop(): void {
+  contentId.value = 0
+  refCamera.value?.onReset()
+}
 </script>
 <template>
   <div class="container-md">
