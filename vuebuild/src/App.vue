@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 let _keeploading: boolean = true
 let _pauseFetch: boolean = false
+let _camloaded: boolean = false;
 let _myid: number = -1
 function getURLParameter(sParam: string): string {
   let sPageURL: string = window.location.search.substring(1),
@@ -456,6 +457,7 @@ function onResult(data: any): void {
     decode.value = data?.text
     let numid: number = Number(decode.value)
     if (decode.value?.length == 5 && '' + numid == decode.value) {
+      _camloaded = false;
       charger.chargerid = numid
       charger.mac = ''
       loads.value = 5
@@ -468,17 +470,15 @@ function onResult(data: any): void {
   }
 }
 function onLoading(loading: boolean): void {
-  snotify.success('onLoading:'+loading)
-}
-function handleOnCanStop(): void {
-  snotify.info('OnCanStop')
-  contentId.value = 0
-  refCamera.value?.onReset()
-}
-function handleOnReset(): void {
-  snotify.error('handleOnReset')
-  contentId.value = 0
-  refCamera.value?.onReset()
+  if (_camloaded) {
+    if (!loading) {
+      _camloaded = false;
+      contentId.value = 0
+      refCamera.value?.onReset()
+    }
+  } else {
+    if (loading) _camloaded = true;
+  }
 }
 </script>
 <template>
