@@ -126,6 +126,7 @@ function channels(): string[] {
   return ['card', 'bank', 'ussd', 'mobile_money']
 }
 function qrscannow(): void {
+  contentId.value = 2
   refCamera.value?.onCanPlay()
 }
 function dologout(): void {
@@ -458,6 +459,7 @@ function onResult(data: any): void {
       charger.chargerid = numid
       charger.mac = ''
       loads.value = 5
+      contentId.value = 0
       refCamera.value?.onReset()
       if (!_keeploading) {
         fetchData()
@@ -468,6 +470,8 @@ function onResult(data: any): void {
 </script>
 <template>
   <div class="container-md">
+    <StreamQrcodeBarcodeReader ref="refCamera" capture="shoot" show-on-stream @result="onResult" />
+
     <div v-if="contentId == 0">
       <ul class="nav nav-pills nav-fill h3 mt-1">
         <li class="nav-item text-start my-auto">
@@ -484,7 +488,7 @@ function onResult(data: any): void {
       <ul class="nav nav-pills nav-fill h3 mt-1 align-middle">
         <li class="nav-item text-start my-auto">
           <span v-if="charger.chargerid"
-            >chargerID:&nbsp;<span>{{ charger.chargerid }}</span></span
+            >{{ $t('chargerID') }}&nbsp;<span>{{ charger.chargerid }}</span></span
           >
           <span v-else>&lt;ScanQR First&gt;</span>
         </li>
@@ -926,7 +930,8 @@ function onResult(data: any): void {
     <vue3-notify />
     <div v-if="loads == 0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="showhours" class="mask opacity" @click="closeme">&nbsp;</div>
-    <StreamQrcodeBarcodeReader ref="refCamera" capture="shoot" show-on-stream @result="onResult" />
+
+    <div v-if="contentId == 2">&nbsp;</div>
   </div>
 </template>
 
