@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 let _keeploading: boolean = true
 let _pauseFetch: boolean = false
-let _camloaded: boolean = false;
+let _camloaded: boolean = false
 let _myid: number = -1
 function getURLParameter(sParam: string): string {
   let sPageURL: string = window.location.search.substring(1),
@@ -464,7 +464,7 @@ function onResult(data: any): void {
     decode.value = data?.text
     let numid: number = Number(decode.value)
     if (decode.value?.length == 5 && '' + numid == decode.value) {
-      _camloaded = false;
+      _camloaded = false
       charger.chargerid = numid
       charger.mac = ''
       loads.value = 5
@@ -479,18 +479,17 @@ function onResult(data: any): void {
 function onLoading(loading: boolean): void {
   if (_camloaded) {
     if (!loading) {
-      _camloaded = false;
+      _camloaded = false
       contentId.value = 0
       refCamera.value?.onReset()
     }
   } else {
-    if (loading) _camloaded = true;
+    if (loading) _camloaded = true
   }
 }
 </script>
 <template>
   <div class="container-md">
-
     <div v-if="contentId == 0">
       <ul class="nav nav-pills nav-fill h3 mt-1">
         <li class="nav-item text-start my-auto">
@@ -950,9 +949,14 @@ function onLoading(loading: boolean): void {
     <div v-if="loads == 0" class="mask opacity" @touchmove.prevent>&nbsp;</div>
     <div v-if="showhours" class="mask opacity" @click="closeme">&nbsp;</div>
 
-    <div v-if="contentId == 2">
-      <StreamQrcodeBarcodeReader ref="refCamera" capture="shoot" show-on-stream @onloading="onLoading" @result="onResult" />
-    </div>
+    <StreamQrcodeBarcodeReader
+      ref="refCamera"
+      capture="shoot"
+      show-on-stream
+      @onloading="onLoading"
+      @result="onResult"
+    />
+    <div v-if="contentId == 2">&nbsp;</div>
   </div>
 </template>
 
