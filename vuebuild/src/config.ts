@@ -6,18 +6,8 @@ export const paystackpublickey: string = 'pk_test_ffffffffffffffffffffffffffffff
 
 export const defaultpaystackid: string = 'info@eddivolt.one'
 
-export const APPVERSION: string = '1.0.6'
-export const twodaymills: number = 172800000
+export const APPVERSION: string = '1.0.1'
 export const prepaylimit: number = 100
-export const ChargerSTATS: readonly string[] = [
-  'readyfree',
-  'readygunin',
-  'readywaiting',
-  'readycharging',
-  'readybadgnd',
-  'stopdown',
-  'offline'
-]
 
 function padTo2Digits(num: number): string {
   return num.toString().padStart(2, '0')

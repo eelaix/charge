@@ -683,7 +683,7 @@ function onLoading(loading: boolean): void {
         </div>
       </div>
       <button class="btn btn-outline-info w-100 mt-3" @click="selecthour">
-        {{ $t('ChargeTIME') }}: {{ thehours[hourid] }}{{ $t('hors') }}
+        {{ $t('ChargeTIME') }} {{ thehours[hourid] }}{{ $t('hors') }}
       </button>
       <button
         class="btn btn-warning w-100 mt-3"
