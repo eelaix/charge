@@ -418,6 +418,10 @@ async function activevcard(): Promise<any> {
     if (ret && ret.status == 200) {
       if (ret.data.rc > 0) {
         contentId.value = 0
+        if ( ret.data.balance!=undefined ) {
+          ayoba.mybalnum = ret.data.balnum
+          ayoba.mybalance = ret.data.balance
+        }
       } else {
         vcardbtn_text.value = ret.data.rm
       }
