@@ -127,7 +127,7 @@ function channels(): string[] {
   return ['card', 'bank', 'ussd', 'mobile_money']
 }
 function opencamera(): void {
-  if (refCamera && refCamera.value) {
+  if (refCamera.value) {
     refCamera.value.onCanPlay()
   } else {
     setTimeout(opencamera, 1000)
@@ -418,7 +418,7 @@ async function activevcard(): Promise<any> {
     if (ret && ret.status == 200) {
       if (ret.data.rc > 0) {
         contentId.value = 0
-        if ( ret.data.balance!=undefined ) {
+        if (ret.data.balance != undefined) {
           ayoba.mybalnum = ret.data.balnum
           ayoba.mybalance = ret.data.balance
         }
@@ -509,7 +509,7 @@ function onLoading(loading: boolean): void {
       </ul>
       <ul class="nav nav-pills nav-fill h3 mt-1 align-middle">
         <li class="nav-item text-start my-auto">
-          <span v-if="charger.chargerid" :class="isloading?'text-danger':'text-success'"
+          <span v-if="charger.chargerid" :class="isloading ? 'text-danger' : 'text-success'"
             >{{ $t('chargerID') }}&nbsp;<span>{{ charger.chargerid }}</span></span
           >
           <span v-else>&lt;Scan Hub QR Code&gt;</span>
@@ -1029,36 +1029,6 @@ function onLoading(loading: boolean): void {
 .fg5 {
   color: rgba(128, 128, 128, 0.1);
 }
-.mopay {
-  width: 100%;
-  margin-top: 20px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  font-size: 1.6rem;
-}
-.pay {
-  width: 100%;
-  margin-top: 20px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  font-size: 1.6rem;
-  color: green;
-}
-.cardpay {
-  width: 100%;
-  margin-top: 20px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  font-size: 1.6rem;
-}
-.hasnet {
-  color: rgba(0, 255, 0, 0.6);
-  text-shadow: 4px 4px 8px rgba(51, 51, 51, 0.2);
-}
-.nonet {
-  color: rgba(102, 102, 102, 0.5);
-  text-shadow: 4px 4px 8px rgba(51, 51, 51, 0.2);
-}
 .mask {
   position: fixed;
   top: 0;
@@ -1093,15 +1063,6 @@ function onLoading(loading: boolean): void {
   display: flex;
   justify-content: space-between;
 }
-.lnk {
-  color: rgba(0, 102, 0, 0.5);
-}
-.offlin {
-  background-color: #d3d3d3;
-  filter: Alpha(Opacity=60);
-  opacity: 0.6;
-  color: #666;
-}
 .xnpanel {
   padding-left: 4vw;
   padding-right: 4vw;
@@ -1112,25 +1073,6 @@ function onLoading(loading: boolean): void {
 }
 .xnshadow {
   box-shadow: 10px 10px 20px rgba(51, 51, 51, 0.4);
-}
-.fullmask {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  z-index: 9994;
-  left: 0;
-  top: 0;
-  background: rgba(0, 0, 0, 0.6);
-}
-.midline {
-  text-decoration: line-through;
-}
-a.disabled {
-  pointer-events: none;
-  color: rgba(51, 51, 51, 0.3);
-}
-.grecaptcha-badge {
-  display: none;
 }
 .pbox {
   padding: 2vw;
@@ -1163,7 +1105,7 @@ a.disabled {
   }
 }
 .opacity {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.3);
 }
 .mypicker {
   position: absolute;
@@ -1173,13 +1115,13 @@ a.disabled {
 }
 @media (prefers-color-scheme: dark) {
   .opacity {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.1);
   }
   .mypicker {
     position: absolute;
     top: 0;
     z-index: 1000;
-    background-color: rgba(102, 102, 102, 0.9);
+    background-color: rgba(51, 51, 51, 0.2);
   }
 }
 @media only screen and (orientation: landscape) {
